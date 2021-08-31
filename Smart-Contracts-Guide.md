@@ -1,8 +1,8 @@
 Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
 
-If you haven't already, skim through everything in [General System Design & Usage](https://github.com/hive-engine/steemsmartcontracts-wiki#general-system-design--usage) before proceeding any further.
+If you haven't already, skim through everything in [General System Design & Usage](https://github.com/hive-engine/hivesmartcontracts-wiki#general-system-design--usage) before proceeding any further.
 
-For convenience, code links in this document are for Hive Engine, but path structure will be similar for Steem Engine versions. In order to pass code review, you will be expected to strictly follow ALL [dev best practices](#dev-best-practices) given below.
+For convenience, code links in this document are for Hive Engine. In order to pass code review, you will be expected to strictly follow ALL [dev best practices](#dev-best-practices) given below.
 
 # Table of Contents
 
@@ -73,19 +73,9 @@ Those design principles and other best practices are explained in detail in the 
 
 
 
-4. Fork this repository: https://github.com/hive-engine/steemsmartcontracts
+4. Fork this repository: https://github.com/hive-engine/hivesmartcontracts
 
-5. Create a branch for yourself. The base branch depends on what Engine you will be developing for:
-    * For Hive Engine: create a branch off the **hive-engine** branch.
-    * For Steem Engine: create a branch off the **witnesses** branch.
-    * Normally, you should NOT use master!
-  
-    Here is the purpose of various important branches:
-    Branch Name | Used For | Platform
-    --- | --- | ---
-    master | core node software releases for Steem Engine | Steem
-    hive-engine | core node software releases for Hive Engine + smart contracts for Hive Engine | Hive
-    witnesses | smart contracts for Steem Engine | Steem
+5. Create a branch for yourself.
 
 6. In your branch, do `npm install`
 
@@ -115,7 +105,7 @@ This is a **marketBuy** action for the **market** smart contract. The **ssc-main
 
 Smart contracts have their own on-chain database storage in the form of what we call tables (these are really MongoDB collections). Tables can be created as part of a contract's initialization action, and then are permanently associated with the contract that created them. Only the owner contract can update data in its tables, but any contract can read them. Contract tables can also be queried externally through the node's API.
 
-Refer to the [database API section](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Database-API.md) for more details.
+Refer to the [database API section](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/master/Database-API.md) for more details.
 
 # Development pipeline
 
@@ -125,21 +115,21 @@ The following sections describe the overall steps in the smart contract developm
 
 Each smart contract consists of two files: a .js file containing the contract code, and a .js file containing unit test code. Both the test file and contract file should have the same name. Also, the file name should be the same as the contract name itself which by convention should be all lowercase with no spaces or dashes between words. Keep names short and to-the-point.
 
-Smart contract code goes here: **steemsmartcontracts/contracts**
+Smart contract code goes here: **hivesmartcontracts/contracts**
 
-Unit tests go here: **steemsmartcontracts/test**
+Unit tests go here: **hivesmartcontracts/test**
 
 Do NOT mix test code up with contract code, or vice versa! They must be strictly separated in the above two directories.
 
 To get started, you can copy one of the existing test & contract files and then modify it as needed. These files are small ones so good to copy for this purpose:
 
-https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/test/crittermanager.js
+https://github.com/hive-engine/hivesmartcontracts/blob/main/test/crittermanager.js
 <br>
-https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/crittermanager.js
+https://github.com/hive-engine/hivesmartcontracts/blob/main/contracts/crittermanager.js
 
 The mining test cases are also good to take a look at, as they use a shortcut style for assertions which you may prefer when writing large test cases:
 
-https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/test/mining.js
+https://github.com/hive-engine/hivesmartcontracts/blob/main/test/mining.js
 
 ## Write contract code
 
@@ -153,12 +143,12 @@ Generally speaking, I write test cases and smart contract code in parallel as I 
 
 There is no need to run your own node to test against. Unit tests are sufficient to be confident your smart contract will work once deployed. The unit test environment closely simulates a real node environment. 100% test coverage is required for all smart contracts. 90% just won't cut it. Yes, writing test cases will often take longer than writing the contract itself. That is expected. You simply can't be too careful when dealing with this stuff; bugs in production can have far more disastrous consequences than for normal desktop programs.
 
-Test cases are expected to have both a negative and positive version for each publicly exposed smart contract action. For example, consider an NFT transfer operation. There is a [transfers tokens](https://github.com/hive-engine/steemsmartcontracts/blob/c11ce22b93d6160967c00560a79e83b67bfcb3e1/test/nft.js#L1281) test to verify tokens can be transferred OK from one account to another (that's the positive test); there is also a [does not transfer tokens](https://github.com/hive-engine/steemsmartcontracts/blob/c11ce22b93d6160967c00560a79e83b67bfcb3e1/test/nft.js#L1410) test that checks all the different ways a transfer action can fail (that's the negative test). It's OK to combine both positive and negative tests into one test case if that is more convenient for a particular testing scenario.
+Test cases are expected to have both a negative and positive version for each publicly exposed smart contract action. For example, consider an NFT transfer operation. There is a [transfers tokens](https://github.com/hive-engine/hivesmartcontracts/blob/c11ce22b93d6160967c00560a79e83b67bfcb3e1/test/nft.js#L1281) test to verify tokens can be transferred OK from one account to another (that's the positive test); there is also a [does not transfer tokens](https://github.com/hive-engine/hivesmartcontracts/blob/c11ce22b93d6160967c00560a79e83b67bfcb3e1/test/nft.js#L1410) test that checks all the different ways a transfer action can fail (that's the negative test). It's OK to combine both positive and negative tests into one test case if that is more convenient for a particular testing scenario.
 
 To run a test, add a line for it in **package.json**:
 
 ```
-"name": "steemsmartcontracts",
+"name": "hivesmartcontracts",
   "version": "0.1.23",
   "description": "",
   "main": "app.js",
@@ -191,7 +181,7 @@ if (DEBUG_MODE) {
 }
 ```
 
-For production deployment, all such output should be removed, or if you use a DEBUG_MODE flag as above, make sure the flag is set to ```false```. The above example is taken from the [marketmaker contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/marketmaker.js).
+For production deployment, all such output should be removed, or if you use a DEBUG_MODE flag as above, make sure the flag is set to ```false```. The above example is taken from the [marketmaker contract](https://github.com/hive-engine/hivesmartcontracts/blob/main/contracts/marketmaker.js).
 
 ## Running lint
 
@@ -209,7 +199,7 @@ However, try not to do that too much.
 
 ## Submitting your code for review
 
-When you are finished, check in all code & tests to your branch and raise a PR (to merge into the **hive-engine** branch if you are developing for Hive Engine). Then notify @cryptomancer on Discord that you have submitted your PR. A code review will be done, to ensure you are following smart contract best practices & all test cases are passing. Note that github itself will automatically run unit tests & lint checks to verify there are no issues with your code.
+When you are finished, check in all code & tests to your branch and raise a PR. Then notify @cryptomancer on Discord that you have submitted your PR. A code review will be done, to ensure you are following smart contract best practices & all test cases are passing. Note that github itself will automatically run unit tests & lint checks to verify there are no issues with your code.
 
 Feedback will be given during the code review process; you may be required to make changes if there are any potential areas of concern.
 
@@ -276,12 +266,11 @@ if __name__ == '__main__':
 
 For quick testing, I recommend using Postman: https://www.postman.com/downloads/
 
-Postman allows you to easily broadcast POST queries to the Engine web API so you can examine the state of the sidechain and check smart contract activity. For details of all the various API calls available, refer to the [JSON RPC server section](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/JSON-RPC-server.md).
+Postman allows you to easily broadcast POST queries to the Engine web API so you can examine the state of the sidechain and check smart contract activity. For details of all the various API calls available, refer to the [JSON RPC server section](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/master/JSON-RPC-server.md).
 
 Let's look at an example of how to query for DEC market orders, by fetching data from the market contract's sellBook table. First, in Postman make sure the query type is POST. The API endpoint is:
 
 * Hive Engine: **https://api.hive-engine.com/rpc/contracts/**
-* Steem Engine: **https://api.steem-engine.com/rpc/contracts/**
 
 Body to send:
 
@@ -307,7 +296,7 @@ Hit Send and if all goes well, you should get back some JSON results:
 
 You can find a detailed description of all the data tables you can query for each smart contract in the individual contract documentation here:
 
-https://github.com/hive-engine/steemsmartcontracts-wiki#contract-documentation
+https://github.com/hive-engine/hivesmartcontracts-wiki#contract-documentation
 
 # Dev Best Practices
 
@@ -382,7 +371,7 @@ Smart contract code executes in a constrained sandbox environment. As such, you 
 
 Javascript built-in objects that are not available: RegExp
 
-Refer to the [smart contracts API](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Smart-Contracts-API.md) section for more information on what is available to you through the api object.
+Refer to the [smart contracts API](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/master/Smart-Contracts-API.md) section for more information on what is available to you through the api object.
 
 ## Working with numbers
 
@@ -400,7 +389,7 @@ Full documentation on the BigNumber library is [available here](https://mikemcl.
 
 ## Input validation
 
-All user input to contract actions should be carefully validated using ```api.assert```. Never trust ANYTHING users send to the contract! You'll find that a very large amount of your coding time is spent fine tuning validations and making sure input is properly formatted. Refer to existing smart contracts for examples of how to do this; your validations should be written in a similar style. The [nft contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/nft.js) has many good examples of a wide variety of input validations, particularly for the create and issue actions.
+All user input to contract actions should be carefully validated using ```api.assert```. Never trust ANYTHING users send to the contract! You'll find that a very large amount of your coding time is spent fine tuning validations and making sure input is properly formatted. Refer to existing smart contracts for examples of how to do this; your validations should be written in a similar style. The [nft contract](https://github.com/hive-engine/hivesmartcontracts/blob/main/contracts/nft.js) has many good examples of a wide variety of input validations, particularly for the create and issue actions.
 
 Some types of validation are notable and deserve further mention:
 
@@ -420,7 +409,7 @@ if (api.assert(isSignedWithActiveKey === true, 'you must use a custom_json signe
 
 ### callingContractInfo
 
-callingContractInfo is another special input parameter, similar to isSignedWithActiveKey. If this smart contract action is being called from another contract, instead of a Hive account, then callingContractInfo will have information about the calling contract. This allows you to design actions that can only be called from another contract, or have different behaviors depending on if they are called from a contract or an account. For usage examples, see the [nft contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/nft.js).
+callingContractInfo is another special input parameter, similar to isSignedWithActiveKey. If this smart contract action is being called from another contract, instead of a Hive account, then callingContractInfo will have information about the calling contract. This allows you to design actions that can only be called from another contract, or have different behaviors depending on if they are called from a contract or an account. For usage examples, see the [nft contract](https://github.com/hive-engine/hivesmartcontracts/blob/main/contracts/nft.js).
 
 ### Verify user authorization
 
@@ -499,7 +488,7 @@ actions.myaction = async (payload) => {
 
 It's crucially important to avoid writing contract actions that can have non-deterministic outcomes. In other words, if all the custom json transactions are replayed from the Hive blockchain, and the sidechain database is empty, it should result in exactly the same contract actions being executed in exactly the same order, with exactly the same results. This is very important for maintaining consensus between multiple sidechain nodes, as each node will have its own copy of the MongoDB database, and all the copies should contain the same data. Non-deterministic outcomes could result in chain forks and other bad behavior.
 
-One way in which non-determinism can accidentally creep in is through database queries. MongoDB query results are not deterministic unless you use an index to sort the results. Hence when order of query results is important, you should ALWAYS use indexes, or else sort the results yourself. The [botcontroller contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/botcontroller.js) has good examples of using indexes to ensure deterministic query results:
+One way in which non-determinism can accidentally creep in is through database queries. MongoDB query results are not deterministic unless you use an index to sort the results. Hence when order of query results is important, you should ALWAYS use indexes, or else sort the results yourself. The [botcontroller contract](https://github.com/hive-engine/hivesmartcontracts/blob/main/contracts/botcontroller.js) has good examples of using indexes to ensure deterministic query results:
 
 ```
 // get some basic accounts that are ready to be ticked
@@ -521,7 +510,7 @@ await tickUsers(params, pendingBasicTicks, currentTimestamp, 'MM-B');
 
 ## Data size limits
 
-On-chain database storage is extremely limited, and relatively expensive. Thus you should ensure your contract does not provide any way for a user to fill the database with unlimited amounts of information at no cost. Fees should be charged for operations that add data to the database, and usage should be kept sensible and limited. As an example of this, user inputs for data that will be stored in the database, such as text strings, should have maximum allowed lengths. Limits should be clearly expressed within the contract code, and defined using constants that can be easily edited later if necessary. The [nft contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/nft.js) has some good examples:
+On-chain database storage is extremely limited, and relatively expensive. Thus you should ensure your contract does not provide any way for a user to fill the database with unlimited amounts of information at no cost. Fees should be charged for operations that add data to the database, and usage should be kept sensible and limited. As an example of this, user inputs for data that will be stored in the database, such as text strings, should have maximum allowed lengths. Limits should be clearly expressed within the contract code, and defined using constants that can be easily edited later if necessary. The [nft contract](https://github.com/hive-engine/hivesmartcontracts/blob/main/contracts/nft.js) has some good examples:
 
 ```
 const MAX_NUM_AUTHORIZED_ISSUERS = 10;
@@ -556,8 +545,8 @@ Some things to keep in mind:
 
 * keep database queries to a minimum, and fetch objects in batches instead of one-at-a-time when possible
 * avoid any loops that could have potentially unbounded execution times
-* define maximum limits on numbers of objects that can be operated on at once; the [nft contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/nft.js) is once again a good example of this
-* if you do need to perform a costly operation, such as iterating over thousands of database records, break the action up across multiple blocks. The checkPendingLotteries action of the [mining contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/mining.js) is an example of a multi-block action.
+* define maximum limits on numbers of objects that can be operated on at once; the [nft contract](https://github.com/hive-engine/hivesmartcontracts/blob/main/contracts/nft.js) is once again a good example of this
+* if you do need to perform a costly operation, such as iterating over thousands of database records, break the action up across multiple blocks. The checkPendingLotteries action of the [mining contract](https://github.com/hive-engine/hivesmartcontracts/blob/main/contracts/mining.js) is an example of a multi-block action.
 
 ## Emitting events
 
@@ -584,7 +573,7 @@ The block logs for this transaction look like this: https://hive-engine.rocks/tx
 
 ## Ticking actions in every block
 
-When a smart contract action is required to execute automatically every sidechain block, we say the action "ticks every block". Examples of such actions include the tick action in the [botcontroller contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/botcontroller.js) and checkPendingLotteries in the [mining contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/mining.js). These actions begin like this:
+When a smart contract action is required to execute automatically every sidechain block, we say the action "ticks every block". Examples of such actions include the tick action in the [botcontroller contract](https://github.com/hive-engine/hivesmartcontracts/blob/main/contracts/botcontroller.js) and checkPendingLotteries in the [mining contract](https://github.com/hive-engine/hivesmartcontracts/blob/main/contracts/mining.js). These actions begin like this:
 
 ```
 actions.tick = async () => {
@@ -596,7 +585,7 @@ actions.tick = async () => {
 
 The action first makes sure that only the null account can call it (effectively this means no normal Hive account can ever use this action; it's a priviledged system action). When ```api.sender === 'null'```, that indicates the caller is the smart contract core node software itself.
 
-In the future we might introduce a general mechanism that can be used to register such priviledged system actions, but for now the only way to get the node software to call such an action is by adding some code to this file: https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/libs/Block.js
+In the future we might introduce a general mechanism that can be used to register such priviledged system actions, but for now the only way to get the node software to call such an action is by adding some code to this file: https://github.com/hive-engine/hivesmartcontracts/blob/main/libs/Block.js
 
 Specifically:
 

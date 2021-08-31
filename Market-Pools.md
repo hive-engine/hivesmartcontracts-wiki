@@ -1,7 +1,5 @@
 Documentation written by [donchate](https://github.com/donchate)
 
-**Note:** this smart contract is only available on Hive Engine, there is no Steem Engine equivalent.
-
 # Table of Contents
 
 * [Introduction](#introduction)
@@ -153,7 +151,7 @@ This action allows a liquidity provider to withdraw their tokens from the market
 Its possible to reward liquidity providers to the pool directly on the sidechain. This allows some customization for each pool and for more methods to be added in the future.
 
 ### createRewardPool
-This action allows a token issuer to create a reward system fulfilled through the Hive Engine [Mining Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Mining-Contract.md).
+This action allows a token issuer to create a reward system fulfilled through the Hive Engine [Mining Contract](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/master/Mining-Contract.md).
 The pool is automatically activated upon creation. A fee of 1000 BEE is required.
 
 * requires active key: yes

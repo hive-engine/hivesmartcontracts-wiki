@@ -13,9 +13,9 @@
 ## 2. Install the Smart Contracts node
 To install the app, simply follow these steps:
 - get the files from the repository: 
-	- via the git cli: ```git clone https://github.com/hive-engine/steemsmartcontracts.git```
+	- via the git cli: ```git clone https://github.com/hive-engine/hivesmartcontracts.git```
 
-- cd into the newly created project folder; for Hive Engine, make sure you are on the ```hive-engine``` branch (for Steem Engine use the witnesses branch). You may consider using a tagged release as well instead to match the primary nodes, in which case you should checkout a release tag e.g. `he_v1.2.0`
+- cd into the newly created project folder; for Hive Engine, make sure you are on the ```main``` branch. You may consider using a tagged release as well instead to match the primary nodes, in which case you should checkout a release tag e.g. `he_v1.2.0`
 	- ```git checkout hive-engine```
 
 - in your console type the following command in the folder that contains the files downloaded from the previous step:
@@ -110,7 +110,7 @@ from the hive genesis block.
 
 ## 6. Checking that your node works
 
-To verify your node is running properly, you can query data from its API. A getStatus query will show you info on the running software version and latest block processed. Refer to [Querying the Engine API](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Smart-Contracts-Guide.md#querying-the-engine-api) for details. In the API URL you should replace ```https://api.hive-engine.com/rpc``` with ```http://<YOUR SERVER IP>:5000```
+To verify your node is running properly, you can query data from its API. A getStatus query will show you info on the running software version and latest block processed. Refer to [Querying the Engine API](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/master/Smart-Contracts-Guide.md#querying-the-engine-api) for details. In the API URL you should replace ```https://api.hive-engine.com/rpc``` with ```http://<YOUR SERVER IP>:5000```
 
 So for example, instead of ```https://api.hive-engine.com/rpc/blockchain``` you would use ```http://<YOUR SERVER IP>:5000/blockchain```
 

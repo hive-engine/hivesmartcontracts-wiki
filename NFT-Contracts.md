@@ -54,7 +54,7 @@ Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
 Creates a new NFT. A creation fee of 100 ENG is required.
 * requires active key: yes
 
-* can be called by: Steem account
+* can be called by: Hive account
 
 * parameters:
   * name (string): name of the token (letters, numbers, whitespace only, max length of 50)
@@ -63,7 +63,7 @@ Creates a new NFT. A creation fee of 100 ENG is required.
   * **(optional)** productName (string): product/brand that this NFT is associated with (letters, numbers, whitespace only, max length of 50)
   * **(optional)** url (string): url of the project (max length of 255)
   * **(optional)** maxSupply (string): maximum supply for the token (between 1 and 9,007,199,254,740,991). If maxSupply is not specified, then the supply will be unlimited.
-  * **(optional)** authorizedIssuingAccounts (array of string): a list of Steem accounts which are authorized to issue new tokens on behalf of the NFT owner. If no list is provided, then the NFT owner (the account that calls create) will be the only such authorized account by default.
+  * **(optional)** authorizedIssuingAccounts (array of string): a list of Hive accounts which are authorized to issue new tokens on behalf of the NFT owner. If no list is provided, then the NFT owner (the account that calls create) will be the only such authorized account by default.
   * **(optional)** authorizedIssuingContracts (array of string): a list of smart contracts which are authorized to issue new tokens on behalf of the NFT owner. If no list is provided, then no smart contracts will be authorized as such.
 
 * examples:
@@ -108,7 +108,7 @@ Creates a new NFT. A creation fee of 100 ENG is required.
 Updates the url of the token's project web site.
 * requires active key: no
 
-* can be called by: Steem account that owns the NFT
+* can be called by: Hive account that owns the NFT
 
 * parameters:
   * url (string): new url for the token (0 <= length <= 255)
@@ -130,7 +130,7 @@ Updates the url of the token's project web site.
 Updates the metadata of a token.
 * requires active key: no
 
-* can be called by: Steem account that owns the NFT
+* can be called by: Hive account that owns the NFT
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
@@ -156,7 +156,7 @@ Updates the metadata of a token.
 Updates the user friendly name of an NFT.
 * requires active key: no
 
-* can be called by: Steem account that owns the NFT
+* can be called by: Hive account that owns the NFT
 
 * parameters:
   * name (string): new name of the token (letters, numbers, whitespace only, max length of 50)
@@ -178,7 +178,7 @@ Updates the user friendly name of an NFT.
 Updates the name of the company/organization that manages an NFT.
 * requires active key: no
 
-* can be called by: Steem account that owns the NFT
+* can be called by: Hive account that owns the NFT
 
 * parameters:
   * orgName (string): new name of the company/organization (letters, numbers, whitespace only, max length of 50)
@@ -200,7 +200,7 @@ Updates the name of the company/organization that manages an NFT.
 Updates the name of the product/brand that an NFT is associated with.
 * requires active key: no
 
-* can be called by: Steem account that owns the NFT
+* can be called by: Hive account that owns the NFT
 
 * parameters:
   * productName (string): new name of the product/brand (letters, numbers, whitespace only, max length of 50)
@@ -219,14 +219,14 @@ Updates the name of the product/brand that an NFT is associated with.
 ```
 
 ### addAuthorizedIssuingAccounts:
-Adds Steem accounts to the list of accounts that are authorized to issue new tokens on behalf of the NFT owner. This will NOT replace the existing list; it only adds to it. There is a maximum limit of 10 accounts that can be on this list.
+Adds Hive accounts to the list of accounts that are authorized to issue new tokens on behalf of the NFT owner. This will NOT replace the existing list; it only adds to it. There is a maximum limit of 10 accounts that can be on this list.
 * requires active key: yes
 
-* can be called by: Steem account that owns the NFT
+* can be called by: Hive account that owns the NFT
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
-  * accounts (array of string): a list of Steem accounts to add to the authorized list
+  * accounts (array of string): a list of Hive accounts to add to the authorized list
 
 * example:
 ```
@@ -245,7 +245,7 @@ If the current authorized account list is ``[ "marc" ]``, then after calling the
 Adds smart contracts to the list of contracts that are authorized to issue new tokens on behalf of the NFT owner. This will NOT replace the existing list; it only adds to it. There is a maximum limit of 10 smart contracts that can be on this list.
 * requires active key: yes
 
-* can be called by: Steem account that owns the NFT
+* can be called by: Hive account that owns the NFT
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
@@ -265,14 +265,14 @@ Adds smart contracts to the list of contracts that are authorized to issue new t
 If the current authorized contract list is ``[ "splinterlands" ]``, then after calling the above example action, the list will be updated to ``[ "splinterlands","mycontract","anothercontract","mygamecontract" ]``
 
 ### removeAuthorizedIssuingAccounts:
-Removes Steem accounts from the list of accounts that are authorized to issue new tokens on behalf of the NFT owner. This will NOT replace the existing list; it only removes from it.
+Removes Hive accounts from the list of accounts that are authorized to issue new tokens on behalf of the NFT owner. This will NOT replace the existing list; it only removes from it.
 * requires active key: yes
 
-* can be called by: Steem account that owns the NFT
+* can be called by: Hive account that owns the NFT
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
-  * accounts (array of string): a list of Steem accounts to remove from the authorized list
+  * accounts (array of string): a list of Hive accounts to remove from the authorized list
 
 * example:
 ```
@@ -291,7 +291,7 @@ If the current authorized account list is ``[ "satoshi","aggroed","cryptomancer"
 Removes smart contracts from the list of contracts that are authorized to issue new tokens on behalf of the NFT owner. This will NOT replace the existing list; it only removes from it.
 * requires active key: yes
 
-* can be called by: Steem account that owns the NFT
+* can be called by: Hive account that owns the NFT
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
@@ -311,14 +311,14 @@ Removes smart contracts from the list of contracts that are authorized to issue 
 If the current authorized contract list is ``[ "mycontract","anothercontract","mygamecontract" ]``, then after calling the above example action, the list will be updated to ``[ "anothercontract" ]``
 
 ### transferOwnership:
-Transfers ownership of an NFT from the current owner to another Steem account.
+Transfers ownership of an NFT from the current owner to another Hive account.
 * requires active key: yes
 
-* can be called by: Steem account that owns the NFT
+* can be called by: Hive account that owns the NFT
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
-  * to (string): Steem account to become the new owner (3 <= length <= 16)
+  * to (string): Hive account to become the new owner (3 <= length <= 16)
 
 * example:
 ```
@@ -353,14 +353,14 @@ As with an NFT's list of authorized issuing accounts & contracts, similarly each
 Adds a new data property schema to an existing NFT definition. For every data property added beyond the third, a 100 ENG fee is required.
 * requires active key: yes
 
-* can be called by: Steem account that owns the NFT
+* can be called by: Hive account that owns the NFT
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
   * name (string): name of the new data property (letters & numbers only, max length of 25)
   * type (string): must be number, string, or boolean as explained above
   * **(optional)** isReadOnly (boolean): if true, then this data property can be set exactly one time and never changed again. The default value is false if this parameter is not specified.
-  * **(optional)** authorizedEditingAccounts (array of string): a list of Steem accounts which are authorized to edit this data property on behalf of the NFT owner. If no list is provided, then the NFT owner (the account that calls create) will be the only such authorized account by default.
+  * **(optional)** authorizedEditingAccounts (array of string): a list of Hive accounts which are authorized to edit this data property on behalf of the NFT owner. If no list is provided, then the NFT owner (the account that calls create) will be the only such authorized account by default.
   * **(optional)** authorizedEditingContracts (array of string): a list of smart contracts which are authorized to edit this data property on behalf of the NFT owner. If no list is provided, then no smart contracts will be authorized as such.
 
 * examples:
@@ -404,12 +404,12 @@ Note that once a data property name and type are set, they normally CANNOT be ch
 Can be used after calling the addProperty action to change the lists of authorized editing accounts & contracts for a given data property. There is a maximum limit of 10 accounts/contracts that can be on each list.
 * requires active key: yes
 
-* can be called by: Steem account that owns the NFT
+* can be called by: Hive account that owns the NFT
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
   * name (string): name of the data property (letters & numbers only, max length of 25)
-  * **(optional)** accounts (array of string): a list of Steem accounts which are authorized to edit this data property on behalf of the NFT owner. This list will completely replace the current one (not add to it).
+  * **(optional)** accounts (array of string): a list of Hive accounts which are authorized to edit this data property on behalf of the NFT owner. This list will completely replace the current one (not add to it).
   * **(optional)** contracts (array of string): a list of smart contracts which are authorized to edit this data property on behalf of the NFT owner. This list will completely replace the current one (not add to it).
 
 * example:
@@ -430,11 +430,11 @@ Can be used after calling the addProperty action to change the lists of authoriz
 Edits one or more data properties on one or more instances of an NFT.
 * requires active key: no
 
-* can be called by: Steem account or smart contract on the authorized list of editing accounts/contracts for the data properties in question
+* can be called by: Hive account or smart contract on the authorized list of editing accounts/contracts for the data properties in question
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
-  * **(optional)** fromType (string): indicates whether this action is being called by a Steem account or a smart contract. Can be set to user or contract. If not specified, defaults to user. Note that a smart contract can still set this to user in order to execute the action on behalf of a Steem account rather than the calling contract itself.
+  * **(optional)** fromType (string): indicates whether this action is being called by a Hive account or a smart contract. Can be set to user or contract. If not specified, defaults to user. Note that a smart contract can still set this to user in order to execute the action on behalf of a Hive account rather than the calling contract itself.
   * nfts (array of object): the data properties to set and their corresponding NFT instance ID. Should be formatted as follows: ``[ {"id":"1", "properties": {"name1":"value1","name2":"value2",...}}, {"id":"2", "properties": {"name1":"value1","name2":"value2",...}, ...} ]``
 
 A maximum of 50 tokens can be edited in a single call of this action.
@@ -490,7 +490,7 @@ Consider the following points carefully before calling this action:
 
 * requires active key: yes
 
-* can be called by: Steem account that owns the NFT
+* can be called by: Hive account that owns the NFT
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
@@ -516,7 +516,7 @@ Updates the schema of a data property. This action can be used to change a data 
 There are further restrictions on data property name changes (see newName parameter below).
 * requires active key: yes
 
-* can be called by: Steem account that owns the NFT
+* can be called by: Hive account that owns the NFT
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
@@ -584,7 +584,7 @@ Once an NFT has been created, its data properties defined, and editing permissio
 
 ### fees
 
-There is a fee per each token issued, which the issuing account or smart contract must pay. The issuer can choose to pay the fee in one of several different regular Steem Engine token types. Initially, such fees will be payable in ENG or PAL. The issuance fee is calculated as follows:
+There is a fee per each token issued, which the issuing account or smart contract must pay. The issuer can choose to pay the fee in one of several different regular Hive Engine token types. Initially, such fees will be payable in ENG or PAL. The issuance fee is calculated as follows:
 
 ``fee = base fee + ((base fee) x (number of data properties))``
 
@@ -600,11 +600,11 @@ The only way to retrieve locked tokens is by burning the NFT instance that conta
 
 Thus locked tokens are a way to give intrinsic value to an NFT, above & beyond what the NFT is worth in its own right. Token holders are incentivized to burn their NFTs in order to get back the value of the tokens locked within.
 
-Note that both regular Steem Engine tokens and other NFT instances can be locked within tokens in this manner. You can even have a mix of different token types.
+Note that both regular Hive Engine tokens and other NFT instances can be locked within tokens in this manner. You can even have a mix of different token types.
 
 ### locked token restrictions
 
-For performance reasons, the following rules apply when dealing with locked tokens. For the purposes of these rules, we use the term **container token** to refer to an NFT instance that contains other NFT instances locked within it (an NFT instance that only contains regular Steem Engine tokens is NOT considered to be a container token).
+For performance reasons, the following rules apply when dealing with locked tokens. For the purposes of these rules, we use the term **container token** to refer to an NFT instance that contains other NFT instances locked within it (an NFT instance that only contains regular Hive Engine tokens is NOT considered to be a container token).
 
 * A maximum of 10 different types of regular tokens can be locked up in a single NFT token (though the quantity of each has no limit).
 * A maximum of 50 NFT instances can be locked up in a single NFT token. A mix of different symbols is permitted without restriction.
@@ -619,18 +619,18 @@ Each issued NFT token has its own unique ID number. This ID starts at 1 for each
 Token IDs are always represented as strings when used in arguments to contract actions. Note that ID numbers are not globally unique; they will only be unique for a given symbol (i.e. MYNFT can have a token with id 5, and OTHERNFT can also have a token with id 5). The combination of symbol and ID number uniquely identifies a token (or NFT instance, as we sometimes refer to them).
 
 ### issue:
-Issues a new instance of an NFT to a Steem account or smart contract. Requires the issuance fee to be paid as described above. The ID of the newly issued token will be returned as part of an "issue" emission in transaction logs.
+Issues a new instance of an NFT to a Hive account or smart contract. Requires the issuance fee to be paid as described above. The ID of the newly issued token will be returned as part of an "issue" emission in transaction logs.
 * requires active key: yes
 
-* can be called by: Steem account or smart contract on the authorized list of issuing accounts/contracts for the NFT in question
+* can be called by: Hive account or smart contract on the authorized list of issuing accounts/contracts for the NFT in question
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
-  * to (string): Steem account or smart contract to issue the token to
-  * feeSymbol (string): the symbol of the regular Steem Engine token to be used for paying issuance fees. Initially, ENG and PAL are the only valid fee symbols, though other types may be added later.
-  * **(optional)** fromType (string): indicates whether this action is being called by a Steem account or a smart contract. Can be set to user or contract. If not specified, defaults to user. Note that a smart contract can still set this to user in order to perform the issuance on behalf of a Steem account rather than the calling contract itself.
-  * **(optional)** toType (string): indicates whether the destination specified by the "to" parameter is a Steem account or a smart contract. Can be set to user or contract. If not specified, defaults to user.
-  * **(optional)** lockTokens (dictionary object): if desired, specifies a basket of regular Steem Engine tokens to be locked within the newly issued NFT instance, as described above. Should be formatted as follows: ``{"SYMBOLONE": "quantity to lock", "SYMBOLTWO": "quantity to lock", ...}``.
+  * to (string): Hive account or smart contract to issue the token to
+  * feeSymbol (string): the symbol of the regular Hive Engine token to be used for paying issuance fees. Initially, ENG and PAL are the only valid fee symbols, though other types may be added later.
+  * **(optional)** fromType (string): indicates whether this action is being called by a Hive account or a smart contract. Can be set to user or contract. If not specified, defaults to user. Note that a smart contract can still set this to user in order to perform the issuance on behalf of a Hive account rather than the calling contract itself.
+  * **(optional)** toType (string): indicates whether the destination specified by the "to" parameter is a Hive account or a smart contract. Can be set to user or contract. If not specified, defaults to user.
+  * **(optional)** lockTokens (dictionary object): if desired, specifies a basket of regular Hive Engine tokens to be locked within the newly issued NFT instance, as described above. Should be formatted as follows: ``{"SYMBOLONE": "quantity to lock", "SYMBOLTWO": "quantity to lock", ...}``.
   * **(optional)** lockNfts (array of object): if desired, specifies a basket of other NFT instances to be locked within the newly issued NFT instance, as described above. Should be formatted as follows: ``[ {"symbol":"SYMBOLONE", "ids":["1","2","3", ...]}, {"symbol":"SYMBOLTWO", "ids":["1","2","3", ...]}, ... ]``
   * **(optional)** properties (dictionary object): if desired, data properties can be set directly at issuance time using this parameter. Should be formatted as follows: ``{ "name1":"value1", "name2":"value2", ... }``
 
@@ -733,7 +733,7 @@ example:
 Issues multiple NFT instances at once. A maximum of 10 tokens can be issued by calling this action (there are some caveats however, see [locked token restrictions](#locked-token-restrictions) above). Issuance fees & other issuing behavior is same as for the issue action above.
 * requires active key: yes
 
-* can be called by: Steem account or smart contract on the authorized list of issuing accounts/contracts for the NFT in question
+* can be called by: Hive account or smart contract on the authorized list of issuing accounts/contracts for the NFT in question
 
 * parameters:
   * instances (array of object): a list of parameters for each token to be issued, as described above for the issue action
@@ -778,7 +778,7 @@ Under the hood, this action simply calls the issue action repeatedly, passing in
 Enables the delegation feature for a token. A fee of 1000 ENG is required to perform this action.
 * requires active key: yes
 
-* can be called by: Steem account that owns the NFT
+* can be called by: Hive account that owns the NFT
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
@@ -819,12 +819,12 @@ Once delegation is enabled, the undelegation cooldown time can NOT be changed, s
 Delegates one or more tokens to another account or smart contract. Can only be called if an NFT has previously had delegation enabled through the enableDelegation action. If a token is already delegated, it cannot be delegated again until it has been undelegated.
 * requires active key: yes
 
-* can be called by: Steem account or smart contract that holds the token(s) to be delegated
+* can be called by: Hive account or smart contract that holds the token(s) to be delegated
 
 * parameters:
-  * to (string): Steem account or smart contract to delegate the token(s) to
-  * **(optional)** fromType (string): indicates whether this action is being called by a Steem account or a smart contract. Can be set to user or contract. If not specified, defaults to user. Note that a smart contract can still set this to user in order to execute the delegation on behalf of a Steem account rather than the calling contract itself.
-  * **(optional)** toType (string): indicates whether the target specified by the "to" parameter is a Steem account or a smart contract. Can be set to user or contract. If not specified, defaults to user.
+  * to (string): Hive account or smart contract to delegate the token(s) to
+  * **(optional)** fromType (string): indicates whether this action is being called by a Hive account or a smart contract. Can be set to user or contract. If not specified, defaults to user. Note that a smart contract can still set this to user in order to execute the delegation on behalf of a Hive account rather than the calling contract itself.
+  * **(optional)** toType (string): indicates whether the target specified by the "to" parameter is a Hive account or a smart contract. Can be set to user or contract. If not specified, defaults to user.
   * nfts (array of object): list of tokens to delegate. Should be formatted as follows: ``[ {"symbol":"SYMBOLONE", "ids":["1","2","3", ...]}, {"symbol":"SYMBOLTWO", "ids":["1","2","3", ...]}, ... ]``
 
 A maximum of 50 tokens can be delegated in a single call of this action. Note that tokens cannot be delegated to the null account.
@@ -908,10 +908,10 @@ example:
 Undelegates one or more tokens that have previously been delegated. If an undelegation is currently pending, calling this action again will have no effect. Tokens being undelegated have to wait for the cooldown time (see enableDelegation action above) to elapse before the undelegation will complete.
 * requires active key: yes
 
-* can be called by: Steem account or smart contract that holds the token(s) to undelegate
+* can be called by: Hive account or smart contract that holds the token(s) to undelegate
 
 * parameters:
-  * **(optional)** fromType (string): indicates whether this action is being called by a Steem account or a smart contract. Can be set to user or contract. If not specified, defaults to user. Note that a smart contract can still set this to user in order to execute the undelegation on behalf of a Steem account rather than the calling contract itself.
+  * **(optional)** fromType (string): indicates whether this action is being called by a Hive account or a smart contract. Can be set to user or contract. If not specified, defaults to user. Note that a smart contract can still set this to user in order to execute the undelegation on behalf of a Hive account rather than the calling contract itself.
   * nfts (array of object): list of tokens to undelegate. Should be formatted as follows: ``[ {"symbol":"SYMBOLONE", "ids":["1","2","3", ...]}, {"symbol":"SYMBOLTWO", "ids":["1","2","3", ...]}, ... ]``
 
 A maximum of 50 tokens can be undelegated in a single call of this action.
@@ -976,12 +976,12 @@ example:
 Transfers one or more tokens to another account or smart contract.
 * requires active key: yes
 
-* can be called by: Steem account or smart contract that holds the token(s) to be transferred
+* can be called by: Hive account or smart contract that holds the token(s) to be transferred
 
 * parameters:
-  * to (string): Steem account or smart contract to transfer the token(s) to
-  * **(optional)** fromType (string): indicates whether this action is being called by a Steem account or a smart contract. Can be set to user or contract. If not specified, defaults to user. Note that a smart contract can still set this to user in order to execute the transfer on behalf of a Steem account rather than the calling contract itself.
-  * **(optional)** toType (string): indicates whether the destination specified by the "to" parameter is a Steem account or a smart contract. Can be set to user or contract. If not specified, defaults to user.
+  * to (string): Hive account or smart contract to transfer the token(s) to
+  * **(optional)** fromType (string): indicates whether this action is being called by a Hive account or a smart contract. Can be set to user or contract. If not specified, defaults to user. Note that a smart contract can still set this to user in order to execute the transfer on behalf of a Hive account rather than the calling contract itself.
+  * **(optional)** toType (string): indicates whether the destination specified by the "to" parameter is a Hive account or a smart contract. Can be set to user or contract. If not specified, defaults to user.
   * nfts (array of object): list of tokens to transfer. Should be formatted as follows: ``[ {"symbol":"SYMBOLONE", "ids":["1","2","3", ...]}, {"symbol":"SYMBOLTWO", "ids":["1","2","3", ...]}, ... ]``
 
 A maximum of 50 tokens can be transferred in a single call of this action. Note that tokens cannot be transferred if they are currently being delegated to another account. Also, tokens cannot be transferred to null; for that you need to use the burn action.
@@ -1065,10 +1065,10 @@ example:
 Burns one or more tokens. When a token is burned, it is sent to the null account and the circulating supply of that NFT is reduced by 1. In addition, any locked tokens contained within the burned token will be released and transferred back to the account that held the burned token.
 * requires active key: yes
 
-* can be called by: Steem account or smart contract that holds the token(s) to be burned
+* can be called by: Hive account or smart contract that holds the token(s) to be burned
 
 * parameters:
-  * **(optional)** fromType (string): indicates whether this action is being called by a Steem account or a smart contract. Can be set to user or contract. If not specified, defaults to user. Note that a smart contract can still set this to user in order to execute the action on behalf of a Steem account rather than the calling contract itself.
+  * **(optional)** fromType (string): indicates whether this action is being called by a Hive account or a smart contract. Can be set to user or contract. If not specified, defaults to user. Note that a smart contract can still set this to user in order to execute the action on behalf of a Hive account rather than the calling contract itself.
   * nfts (array of object): list of tokens to burn. Should be formatted as follows: ``[ {"symbol":"SYMBOLONE", "ids":["1","2","3", ...]}, {"symbol":"SYMBOLTWO", "ids":["1","2","3", ...]}, ... ]``
 
 A maximum of 50 tokens can be burned in a single call of this action. Note that tokens cannot be burned if they are currently being delegated to another account. There are some additional caveats, see [locked token restrictions](#locked-token-restrictions) above.
@@ -1120,14 +1120,14 @@ Note: all tables below have an implicit _id field that provides a unique numeric
 contains contract parameters such as the current fees
 * fields
   * nftCreationFee = the fee in ENG for creating a new NFT through the create action
-  * nftIssuanceFee = a mapping of Steem Engine tokens that can be used to pay for new NFT issuance through the issue action. The issuer can choose which of these tokens to pay the fee in.
+  * nftIssuanceFee = a mapping of Hive Engine tokens that can be used to pay for new NFT issuance through the issue action. The issuer can choose which of these tokens to pay the fee in.
   * dataPropertyCreationFee = the fee in ENG for adding new data properties to an NFT's definition through the addProperty action. Note that the first 3 properties are free; this fee must be paid for each additional property added beyond the first three.
   * enableDelegationFee = the fee in ENG for enabling delegation support through the enableDelegation action
 
 ## nfts:
 contains definitions of each NFT
 * fields
-  * issuer = the Steem account that owns the NFT (i.e. called the create action)
+  * issuer = the Hive account that owns the NFT (i.e. called the create action)
   * symbol = the token symbol
   * name = the human friendly name of the token
   * metadata = token metadata such as the URL and long text description
@@ -1136,7 +1136,7 @@ contains definitions of each NFT
   * circulatingSupply = the number of tokens in circulation (i.e. tokens that have not been burned)
   * delegationEnabled = is delegation enabled for this NFT? (true / false)
   * undelegationCooldown = if delegation is enabled, this will be the number of days of cooldown needed when a token is undelegated
-  * authorizedIssuingAccounts = list of Steem accounts authorized to issue tokens on behalf of the NFT owner
+  * authorizedIssuingAccounts = list of Hive accounts authorized to issue tokens on behalf of the NFT owner
   * authorizedIssuingContracts = list of smart contracts authorized to issue tokens on behalf of the NFT owner
   * properties = schema definition of any data properties belonging to this NFT
   * groupBy = list of data property names by which market orders for NFT instances should be grouped 
@@ -1144,7 +1144,7 @@ contains definitions of each NFT
 The properties field is a dictionary mapping property names to schema that have their own structure as follows:
 * type = indicates the type of the data property. Can be string, number, or boolean.
 * isReadOnly = if true, this data property can be set exactly once and then never changed again.
-* authorizedEditingAccounts = list of Steem accounts that are authorized to edit this data property
+* authorizedEditingAccounts = list of Hive accounts that are authorized to edit this data property
 * authorizedEditingContracts = list of smart contracts that are authorized to edit this data property
 
 example of a typical NFT definition:
@@ -1207,18 +1207,18 @@ contains records of all undelegations which are waiting for cooldown to complete
 Every NFT symbol has its own separate table to store NFT instances (issued tokens). The instance table name for a particular symbol is formed by taking the symbol and adding "instances" to the end of it. Thus, if you have an NFT called MYNFT, the MYNFTinstances table will store all the issued MYNFT tokens.
 * fields
   * _id = the token ID number
-  * account = the Steem account or smart contract that holds this particular token
-  * ownedBy = indicates if this token is held in a Steem account or smart contract. For a Steem account, the value will be "u".  For a smart contract, the value will be "c".
-  * lockedTokens = describes all regular Steem Engine tokens which are locked in this particular NFT instance. If there are no locked tokens, the value will be {}
+  * account = the Hive account or smart contract that holds this particular token
+  * ownedBy = indicates if this token is held in a Hive account or smart contract. For a Hive account, the value will be "u".  For a smart contract, the value will be "c".
+  * lockedTokens = describes all regular Hive Engine tokens which are locked in this particular NFT instance. If there are no locked tokens, the value will be {}
   * properties = values of all the data properties for this particular NFT instance. If there are no data properties set, the value will be {}
   * **(optional)** lockedNfts = describes all NFT instances which are locked in this particular NFT instance. If there are no locked NFT instances, this field will not exist (will be undefined). For burned tokens on the null account, this field *may* exist but with the value set to an empty array []
   * **(optional)** delegatedTo = if this token is delegated, will contain information about which account or contract the token is delegated to. If there is no delegation, this field will not exist (will be undefined).
-  * **(optional)** previousAccount = the Steem account or smart contract that previously held this particular token. Will only be set if the token has been burned or transferred at least once. If a token was bought on the market, previousAccount will be the NFT market contract itself.
-  * **(optional)** previousOwnedBy = same meaning as ownedBy, but for the Steem account or smart contract that previously held this particular token. Will only be set if previousAccount is set.
+  * **(optional)** previousAccount = the Hive account or smart contract that previously held this particular token. Will only be set if the token has been burned or transferred at least once. If a token was bought on the market, previousAccount will be the NFT market contract itself.
+  * **(optional)** previousOwnedBy = same meaning as ownedBy, but for the Hive account or smart contract that previously held this particular token. Will only be set if previousAccount is set.
 
 The delegatedTo field has its own structure as follows:
-* account = the Steem account or smart contract that the token is delegated to
-* ownedBy = indicates if the token is delegated to a Steem account or smart contract. For a Steem account, the value will be "u".  For a smart contract, the value will be "c".
+* account = the Hive account or smart contract that the token is delegated to
+* ownedBy = indicates if the token is delegated to a Hive account or smart contract. For a Hive account, the value will be "u".  For a smart contract, the value will be "c".
 * **(optional)** undelegateAt = if this token is pending undelegation, this will be the timestamp when the undelegation will be completed (in milliseconds). If there is no pending undelegation, this field will not exist (will be undefined)
 
 examples of typical token data:
@@ -1273,7 +1273,7 @@ examples of typical token data:
 
 The crittermanager contract serves as a reference example of how to do Splinterlands style NFT pack issuance. The comments in the source code should give a good idea of how it works.
 
-[Critter Manager smart contract source code](https://github.com/hive-engine/steemsmartcontracts/blob/witnesses/contracts/crittermanager.js)
+[Critter Manager smart contract source code](https://github.com/hive-engine/hivesmartcontracts/blob/witnesses/contracts/crittermanager.js)
 
 Everything done in this example contract can be done just as well from Python or Javascript. It's worth repeating that all NFT interactions can be boiled down to simply broadcasting the appropriate custom json commands. It demonstrates the following features:
 
