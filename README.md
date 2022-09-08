@@ -48,6 +48,8 @@
 
 [Claimdrops Contract](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/master/Claimdrops-Contract.md)
 
+[NFT Airdrops Contract](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/master/NFT-Airdrops-Contract.md)
+
 [Distribution Contract](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/master/Distribution-Contract.md)
 
 [Decentralized Token Fund (DTF) Contract](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/master/TokenFund-Contract.md)

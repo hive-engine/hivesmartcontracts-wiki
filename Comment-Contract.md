@@ -10,6 +10,8 @@ Documentation written by [eonwarped](https://github.com/eonwarped)
   * [createRewardPool](#createrewardpool)
   * [updateRewardPool](#updaterewardpool)
   * [setActive](#setactive)
+  * [setMute](#setmute)
+  * [resetPool](#resetpool)
   * [comment](#comment)
   * [commentOptions](#commentoptions)
   * [vote](#vote)
@@ -76,6 +78,14 @@ For now, only one reward pool per token is allowed.
     * config.downvotePowerConsumption (integer): How much downvote power is consumed at full downvoting power for a 100% downvote.
     * config.stakedRewardPercentage (integer): What percentage of rewards should be given as staked. Should be between 0 and 100, inclusive.
     * config.tags (array of strings): Which tags should be looked at to index a post for this reward pool. This will also look at the community (stored in parent_permlink for the root post).
+    * config.disableDownvote (boolean): Whether to disable downvotes.
+    * config.ignoreDeclinePayout (boolean): Whether to ignore decline payout in comment options.
+    * config.appTaxConfig (object): Configure an app tax for posts not using a designated app.
+      * config.appTaxConfig.app (string): App to compare. Matches to a comment's `jsonMetadata.app` field.
+      * config.appTaxConfig.percent (integer): Percent to deduct from non-curation portion of rewards. This portion is deducted first, then author beneficiary split is processed on the remaining amount. Must be between 1 and 100, inclusive.
+      * config.appTaxConfig.beneficiary (string): Account to send deducted rewards to. Will be paid out fully liquid.
+    * config.excludeTags (array of strings): Which tags should be ignored when indexing a post for this reward pool.
+      
 
 
 * examples:
@@ -100,6 +110,14 @@ For now, only one reward pool per token is allowed.
             "votePowerConsumption": 200,
             "downvotePowerConsumption": 2000,
             "tags": ["scottest"],
+            "disableDownvote": true,
+            "ignoreDeclinePayout": true,
+            "appTaxConfig": {
+                "app": "leofinance",
+                "percent": 20,
+                "beneficiary": "null"
+            },
+            "excludeTags": ["spam"]
         }
     }
 }
@@ -137,6 +155,14 @@ Update a reward pool. An update fee of 100 BEE is required.
     * config.downvotePowerConsumption (integer): How much downvote power is consumed at full downvoting power for a 100% downvote.
     * config.stakedRewardPercentage (integer): What percentage of rewards should be given as staked. Should be between 0 and 100, inclusive.
     * config.tags (array of strings): Which tags should be looked at to index a post for this reward pool. This will also look at the community (stored in parent_permlink for the root post).
+    * config.disableDownvote (boolean): Whether to disable downvotes.
+    * config.ignoreDeclinePayout (boolean): Whether to ignore decline payout in comment options.
+    * config.appTaxConfig (object): Configure an app tax for posts not using a designated app.
+      * config.appTaxConfig.app (string): App to compare. Matches to a comment's `jsonMetadata.app` field.
+      * config.appTaxConfig.percent (integer): Percent to deduct from non-curation portion of rewards. This portion is deducted first, then author beneficiary split is processed on the remaining amount. Must be between 1 and 100, inclusive.
+      * config.appTaxConfig.beneficiary (string): Account to send deducted rewards to. Will be paid out fully liquid.
+    * config.excludeTags (array of strings): Which tags should be ignored when indexing a post for this reward pool.
+      
 
 * examples:
 ```
@@ -160,6 +186,14 @@ Update a reward pool. An update fee of 100 BEE is required.
             "votePowerConsumption": 200,
             "downvotePowerConsumption": 2000,
             "tags": ["scottest"],
+            "disableDownvote": true,
+            "ignoreDeclinePayout": true,
+            "appTaxConfig": {
+                "app": "leofinance",
+                "percent": 20,
+                "beneficiary": "null"
+            },
+            "excludeTags": ["spam"]
         }
     }
 }
@@ -181,6 +215,54 @@ Disable or enable a reward pool. Posts and votes will stop being processed while
     "contractPayload": {
         "rewardPoolId": 1,
         "active": true
+    }
+}
+```
+
+### setMute
+Sets mute status for an account in a reward pool. 
+Votes from a muted account will count for 0 rshares
+and any payouts to the muted account will not pay out,
+but a log will still be emitted for how much would
+have paid out.
+* requires active key: yes
+* can be called by: token issuer
+* parameters:
+  * rewardPoolId (id): ID of pool to modify.
+  * account (string): Account to set mute for.
+  * mute (boolean): Whether account should be muted.
+
+* examples:
+```
+{
+    "contractName": "comments",
+    "contractAction": "setMute",
+    "contractPayload": {
+        "rewardPoolId": 1,
+        "account": "spammer",
+        "mute": true
+    }
+}
+```
+
+### resetPool
+Resets a reward pool. Reward pool is set to 0, 
+timestamps are set to current, as if the pool
+was just created. Note pending payouts will
+pay out at the next reward interval.
+
+* requires active key: yes
+* can be called by: token issuer
+* parameters:
+  * rewardPoolId (id): ID of pool to modify.
+
+* examples:
+```
+{
+    "contractName": "comments",
+    "contractAction": "resetPool",
+    "contractPayload": {
+        "rewardPoolId": 1
     }
 }
 ```
@@ -334,3 +416,4 @@ contains information about an account's voting power
   * lastVoteTimestamp: timestamp of last vote or downvote
   * votingPower: voting power at last vote timestamp
   * downvotingPower: downvoting power at last vote timestamp
+  * mute: whether account is muted

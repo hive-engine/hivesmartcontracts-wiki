@@ -44,9 +44,23 @@ The ```config.json``` file has all the settings to make sure your node listens t
     ],
     "startHiveBlock": 41967000,   // last Hive block parsed by the node
     "genesisHiveBlock": 41967000,   // first block that was parsed by the sidechain, needs to be the same on all nodes listening to the sidechain id previously defined
-    "witnessEnabled": false
+    "witnessEnabled": false,
+    "defaultLogLevel": "warn",
+    "lightNode": false,
+    "blocksToKeep": 864000,
+    "domain" : ""
 }
 ```
+
+Optional config settings which you may wish to edit:
+
+**domain** - if you have a domain name for your node, put the fully qualified domain name here. This information will be returned when status queries are made to your node's API.
+
+**lightNode** - if set to true, your node will run in light configuration. A light node does not keep full transaction & block information, which reduces the disk space requirements for running the software (old blocks & transactions are cleaned up periodically). Note that you can't switch from a light node back to running as a full node later on (you would need to restore from a full node snapshot).
+
+**blocksToKeep** - only used when lightNode = true. Specifies how many recent blocks worth of block data & transactions should be kept by light nodes. Defaults to 30 days worth, assuming a perfect 3 second block time.
+
+For more details about light nodes, see the documentation on the pull request here: https://github.com/hive-engine/steemsmartcontracts/pull/144
 
 ## 4. Start the node
 **Additional step needed for now** - Set your machine time zone to UTC:  `export TZ=UTC` for consistent contract behavior until the contract level bug is resolved.
@@ -65,30 +79,27 @@ You may also use `pm2` as well, in which case you should run with the command
 
 Or else `pm2 stop` will kill all sub processes prematurely and not allow for a clean exit.
 
-## 5a. Replay from a blocks.log file (DO NOT USE, WILL NOT WORK)
+## 5a. Replay from a blocks.log file (DO NOT USE, CURRENTLY NOT WORKING)
 When starting a node for the first time you can either replay the whole sidechain from the Hive blockchain (which can last very long) or replay from a blocks.log file.
 The blocks.log file is actually the table called "chain" that you can find in your MongoDB database.
 
-- Find a blocks.log file (ask someone to provide you a JSON version of their "chain" table) or download our official one
+- Find a blocks.log file (ask someone to provide you a JSON version of their "chain" table)
 - Start the tool via ```node app.js --replay file```
 
 This command will basically read the file located under "blocksLogFilePath" from the "config.json" file and rebuild the sidechain from the blocks stored in this file.
 
-The latest public blocks.log file is available here in zipped format, file size is about 2.8 GB:
-https://api.hive-engine.com/blocks_01-19-2021.log.tar.gz
-
 ## 5b. Restore a MongoDB dump (recommended approach)
 The fastest way to fire up a node is by restoring a MongoDB dump.
 
-~~The latest public DB snapshot is available here, file size is about 6 GB: hsc_05-22-2021_b54107973.archive~~
+~~The latest public DB snapshot is available here, file size is about 6 GB: hsc_05-22-2021_b54107973.archive. When using this snapshot, set ```startHiveBlock``` to **54107973** in your config file.~~
 
-June 7, 2021 update: sorry, we no longer provide public snapshots due to server bandwidth considerations. We may make them available again in the future, but for now there are some Hive Engine witnesses that provide snapshots as a public service. The latest witness provided snapshot is available here:
-```
-wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1YEa1Wvgo65V9ouvbBJ4vU6O3J3HbFlBw' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1YEa1Wvgo65V9ouvbBJ4vU6O3J3HbFlBw" -O hsc_05-22-2021_b54107973.archive
- && rm -rf /tmp/cookies.txt
- ```
+June 7, 2021 update: sorry, we no longer provide public snapshots due to server bandwidth considerations. We may make them available again in the future, but for now there are some Hive Engine witnesses that provide snapshots as a public service. The latest witness provided snapshots are available here:
 
-When using this snapshot, set ```startHiveBlock``` to **54107973** in your config file.
+https://snap.primersion.com/
+
+https://jedigeiss.tech/
+
+snapshots for light nodes:  https://snap.primersion.com/light/
 
 - Make sure node is stopped
 - Download a dump of the MongoDB database
@@ -100,7 +111,7 @@ When using this snapshot, set ```startHiveBlock``` to **54107973** in your confi
 	- show dbs    // to confirm db has been dropped
 	- quit()
 	- mongorestore --gzip --archive=hsc_05-22-2021_b54107973.archive
-- Update the "config.json" file with the "startHiveBlock" that matches the dump you just restored
+- Update the "config.json" file with the "startHiveBlock" that matches the dump you just restored (number after ```b``` e.g. 54107973)
 - Start the node
 
 ## 5c. Restore from hive genesis block.
