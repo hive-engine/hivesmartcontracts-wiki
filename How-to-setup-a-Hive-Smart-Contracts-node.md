@@ -1,6 +1,6 @@
 ## 1. Environment setup
 - Make sure you have a Linux server to run the node on. Low end specs are fine for now: 2 GB RAM, a dual core CPU, and at least 50 GB free disk space should work great. (For 2G RAM, you will need to add swap space, so recommend 4G RAM) Ubuntu is recommended, though other flavors of Linux will probably also work.
-- Install NodeJS and NPM. Node version 12+ is recommended: https://linuxize.com/post/how-to-install-node-js-on-ubuntu-18.04/
+- Install NodeJS and NPM. Node version 14+ is recommended: https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04
 - Install MongoDB. At least version 4.4.3 is required (that's what production nodes are running): https://docs.mongodb.com/v4.4/administration/install-community/, which needs to have replication enabled: https://docs.mongodb.com/manual/tutorial/convert-standalone-to-replica-set/
   - To enable replication, you just need to add to the replication config in the mongo config:
     ```
@@ -15,11 +15,11 @@ To install the app, simply follow these steps:
 - get the files from the repository: 
 	- via the git cli: ```git clone https://github.com/hive-engine/hivesmartcontracts.git```
 
-- cd into the newly created project folder; for Hive Engine, make sure you are on the ```main``` branch. You may consider using a tagged release as well instead to match the primary nodes, in which case you should checkout a release tag e.g. `he_v1.2.0`
-	- ```git checkout hive-engine```
+- cd into the newly created project folder; for Hive Engine, make sure you are on the ```main``` branch. You may consider using a tagged release as well instead to match the primary nodes, in which case you should checkout a release tag e.g. `he_v1.8.1`
+	- ```git checkout main```
 
 - in your console type the following command in the folder that contains the files downloaded from the previous step:
-	- ```npm install```
+	- ```npm ci```
 
 ## 3. Configure the node
 The ```config.json``` file has all the settings to make sure your node listens to the Hive blockchain and generates the proper genesis block. You shouldn't need to change any of the default config, it can just be used as is. If you are configuring a witness, then additionally set `witnessEnabled` to true, and copy `.env.example` to `.env` to set up your witness settings. Be careful as configuring asks for a witness private signing key in plain text.
@@ -48,7 +48,12 @@ The ```config.json``` file has all the settings to make sure your node listens t
     "defaultLogLevel": "warn",
     "lightNode": false,
     "blocksToKeep": 864000,
-    "domain" : ""
+    "domain" : "",
+    "rpcConfig" : {
+        "maxLimit" : 1000,
+        "maxOffset" : -1,
+        "logRequests" : false
+    }
 }
 ```
 
@@ -59,6 +64,13 @@ Optional config settings which you may wish to edit:
 **lightNode** - if set to true, your node will run in light configuration. A light node does not keep full transaction & block information, which reduces the disk space requirements for running the software (old blocks & transactions are cleaned up periodically). Note that you can't switch from a light node back to running as a full node later on (you would need to restore from a full node snapshot).
 
 **blocksToKeep** - only used when lightNode = true. Specifies how many recent blocks worth of block data & transactions should be kept by light nodes. Defaults to 30 days worth, assuming a perfect 3 second block time.
+
+**rpcConfig.maxLimit** - max results to be returned from a rpc call, default is 1000
+
+**rpcConfig.maxOffset** - maximum allowable offset on a rpc call, with -1 being unlimited, default is -1
+
+**rpcConfig.logRequests** - if set to true, all requests to the json-rpc server will be logged, with IP and the body of the request, default is false
+
 
 For more details about light nodes, see the documentation on the pull request here: https://github.com/hive-engine/steemsmartcontracts/pull/144
 
@@ -97,9 +109,15 @@ June 7, 2021 update: sorry, we no longer provide public snapshots due to server 
 
 https://snap.primersion.com/
 
+https://snap.rishipanthee.com/snapshots/ (mirror of https://snap.primersion.com/)
+
 https://jedigeiss.tech/
 
-snapshots for light nodes:  https://snap.primersion.com/light/
+snapshots for light nodes:  
+
+https://snap.primersion.com/light/
+
+https://snap.rishipanthee.com/snapshots/light/ (mirror of https://snap.primersion.com/light/)
 
 - Make sure node is stopped
 - Download a dump of the MongoDB database
