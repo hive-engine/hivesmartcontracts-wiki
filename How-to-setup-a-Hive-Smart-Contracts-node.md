@@ -1,7 +1,10 @@
 ## 1. Environment setup
-- Make sure you have a Linux server to run the node on. Low end specs are fine for now: 2 GB RAM, a dual core CPU, and at least 50 GB free disk space should work great. (For 2G RAM, you will need to add swap space, so recommend 4G RAM) Ubuntu is recommended, though other flavors of Linux will probably also work.
+- Make sure you have a Linux server to run the node on. Medium specs are fine for now: 4 GB RAM, a dual core CPU, and at least 300 GB free disk space should work great. (For 4G RAM, you will need to add swap space, so recommend 8G RAM) Ubuntu is recommended, though other flavors of Linux will probably also work.
 - Install NodeJS and NPM. Node version 14+ is recommended: https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04
+    - Node.JS 16 has been observed to work as well
+    - If using Node.JS 17+, be sure to use `openssl-legacy-provider` as a node arg
 - Install MongoDB. At least version 4.4.3 is required (that's what production nodes are running): https://docs.mongodb.com/v4.4/administration/install-community/, which needs to have replication enabled: https://docs.mongodb.com/manual/tutorial/convert-standalone-to-replica-set/
+    - MongoDB 5.x has been observed to work as well
   - To enable replication, you just need to add to the replication config in the mongo config:
     ```
     replication:
