@@ -584,13 +584,13 @@ Once an NFT has been created, its data properties defined, and editing permissio
 
 ### fees
 
-There is a fee per each token issued, which the issuing account or smart contract must pay. The issuer can choose to pay the fee in one of several different regular Hive Engine token types. Initially, such fees will be payable in ENG or PAL. The issuance fee is calculated as follows:
+There is a fee per each token issued, which the issuing account or smart contract must pay. The issuer can choose to pay the fee in one of several different regular Hive Engine token types. Initially, such fees will be payable in BEE or PAL. The issuance fee is calculated as follows:
 
 ``fee = base fee + ((base fee) x (number of data properties))``
 
-The base fee when paying with ENG or PAL is 0.001. The fee reflects the fact that on-chain storage has a cost, so the more data properties an NFT has, the higher the issuance fee will be per token.
+The base fee when paying with BEE or PAL is 0.001. The fee reflects the fact that on-chain storage has a cost, so the more data properties an NFT has, the higher the issuance fee will be per token.
 
-**Example:** you want to issue 3 tokens and pay the fees in ENG. Your NFT has 4 data properties. You will pay 0.005 ENG per token issued (the base fee of 0.001, plus an additional 0.001 for each data property). The total cost to issue 3 tokens will be 0.015 ENG. 
+**Example:** you want to issue 3 tokens and pay the fees in BEE. Your NFT has 4 data properties. You will pay 0.005 BEE per token issued (the base fee of 0.001, plus an additional 0.001 for each data property). The total cost to issue 3 tokens will be 0.015 BEE. 
 
 ### locked tokens
 
@@ -611,6 +611,10 @@ For performance reasons, the following rules apply when dealing with locked toke
 * Container tokens must be issued individually, you may not issue more than one of them at once using the issueMultiple action.
 * Container tokens must be burned individually, you may not burn more than one at a time using the burn action.
 * In the issueMultiple and burn actions, container tokens and non-container tokens cannot be mixed. You can burn up to EITHER 50 non-container tokens OR 1 container token at a time.
+
+### soulBound
+
+A nft token can be soulBound and the user or contract it has been issued to cannot transfer it, place it for sale on the market, or airdrop it. They are still allowed to burn it in the case they would like to remove it from their account. A soulBound instance cannot be unsoulBound, and a non soulBound instance cannot be changed later to become soulBound.
 
 ### token IDs
 
@@ -633,9 +637,11 @@ Issues a new instance of an NFT to a Hive account or smart contract. Requires th
   * **(optional)** lockTokens (dictionary object): if desired, specifies a basket of regular Hive Engine tokens to be locked within the newly issued NFT instance, as described above. Should be formatted as follows: ``{"SYMBOLONE": "quantity to lock", "SYMBOLTWO": "quantity to lock", ...}``.
   * **(optional)** lockNfts (array of object): if desired, specifies a basket of other NFT instances to be locked within the newly issued NFT instance, as described above. Should be formatted as follows: ``[ {"symbol":"SYMBOLONE", "ids":["1","2","3", ...]}, {"symbol":"SYMBOLTWO", "ids":["1","2","3", ...]}, ... ]``
   * **(optional)** properties (dictionary object): if desired, data properties can be set directly at issuance time using this parameter. Should be formatted as follows: ``{ "name1":"value1", "name2":"value2", ... }``
+  *  **(optional)** soulBound (boolean) : if desired, a token can be soulBound to the user, can be either `true` or `false`
 
 * examples:
 ```
+
 // issue from user -> user
 {
     "contractName": "nft",
@@ -707,9 +713,21 @@ Issues a new instance of an NFT to a Hive account or smart contract. Requires th
         }
     }
 }
+
+// issue soulBound
+{
+    "contractName": "nft",
+    "contractAction": "issue",
+    "contractPayload": {
+        "symbol": "TESTNFT",
+        "to": "aggroed",
+        "feeSymbol": "PAL"
+        "soulBound" : true
+    }
+}
 ```
 A successful issue action will emit an "issue" event for each token issued:
-``from: issuing account, fromType: user or contract, to: destination account, toType: user or contract, symbol, lockedTokens: list of locked regular tokens, lockedNfts: list of locked NFT instances, properties: any data properties set, id: token ID of newly issued token as an integer``
+``from: issuing account, fromType: user or contract, to: destination account, toType: user or contract, symbol, lockedTokens: list of locked regular tokens, lockedNfts: list of locked NFT instances, properties: any data properties set, id: token ID of newly issued token as an integer, soulBound: if the instance is soulBound or not``
 example:
 ```
 {
@@ -724,7 +742,8 @@ example:
         "lockedTokens": {"ENG": "10"},
         "lockedNfts": [{"symbol": "TSTNFT", "ids":["3"]}, {"symbol": "TEST", "ids": ["1","2"]}]
         "properties": {"color": "yellow"},
-        "id": 4
+        "id": 4,
+        "soulBound" : false
     }
 }
 ```
