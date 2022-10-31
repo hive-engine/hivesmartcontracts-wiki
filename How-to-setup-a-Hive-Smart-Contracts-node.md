@@ -1,7 +1,6 @@
 ## 1. Environment setup
 - Make sure you have a Linux server to run the node on. Medium specs are fine for now: 4 GB RAM, a dual core CPU, and at least 300 GB free disk space should work great. (For 4G RAM, you will need to add swap space, so recommend 8G RAM) Ubuntu is recommended, though other flavors of Linux will probably also work.
-- Install NodeJS and NPM. Node version 14+ is recommended: https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04
-    - Node.JS 16 has been observed to work as well
+- Install NodeJS and NPM. Node version 16.15.0+ is required: https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04
     - If using Node.JS 17+, be sure to use `openssl-legacy-provider` as a node arg
 - Install MongoDB. At least version 4.4.3 is required (that's what production nodes are running): https://docs.mongodb.com/v4.4/administration/install-community/, which needs to have replication enabled: https://docs.mongodb.com/manual/tutorial/convert-standalone-to-replica-set/
     - MongoDB 5.x has been observed to work as well
@@ -56,6 +55,10 @@ The ```config.json``` file has all the settings to make sure your node listens t
         "maxLimit" : 1000,
         "maxOffset" : -1,
         "logRequests" : false
+    },
+    "rpcWebsockets" : {
+        "enabled" : true,
+        "port" : 5002
     }
 }
 ```
@@ -74,6 +77,7 @@ Optional config settings which you may wish to edit:
 
 **rpcConfig.logRequests** - if set to true, all requests to the json-rpc server will be logged, with IP and the body of the request, default is false
 
+**rpcWebsockets** - see documentation here: https://github.com/hive-engine/hivesmartcontracts/pull/5
 
 For more details about light nodes, see the documentation on the pull request here: https://github.com/hive-engine/steemsmartcontracts/pull/144
 
