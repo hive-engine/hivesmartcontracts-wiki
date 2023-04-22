@@ -86,7 +86,7 @@ Optional config settings which you may wish to edit:
 
 **rpcConfig.logRequests** - if set to true, all requests to the json-rpc server will be logged, with IP and the body of the request, default is false
 
-**rpcConfig.disabledMethods.blockchain** - a list of blockchain RPC API methods that are unsupported on this particular node. By default getBlockRangeInfo is disabled, as this is a heavy, processor intensive call that should only be used on private nodes. Note that the `getStatus` API cannot be disabled this way.
+**rpcConfig.disabledMethods.blockchain** - a list of blockchain RPC API methods that are unsupported on this particular node. By default `getBlockRangeInfo` is disabled, as this is a heavy, processor intensive call that should only be used on private nodes. Note that the `getStatus` API cannot be disabled this way.
 
 **rpcConfig.disabledMethods.contracts** - same as above but for the contracts RPC API calls. By default, all these methods are enabled.
 
