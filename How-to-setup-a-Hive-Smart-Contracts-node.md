@@ -39,10 +39,10 @@ The ```config.json``` file has all the settings to make sure your node listens t
     "javascriptVMTimeout": 10000,   // the timeout that will be applied to the JavaScript virtual machine, needs to be the same on all the nodes of the sidechain
     // array of Hive full nodes used for failover
     "streamNodes": [
-        "https://api.openhive.network",
-        "https://api.hive.blog",
-        "https://anyx.io",
-        "https://api.hivekings.com"
+        "https://api.deathwing.me",
+        "https://rpc.ecency.com",
+        "https://hived.emre.sh",
+        "https://api.openhive.network"
     ],
     "startHiveBlock": 41967000,   // last Hive block parsed by the node
     "genesisHiveBlock": 41967000,   // first block that was parsed by the sidechain, needs to be the same on all nodes listening to the sidechain id previously defined
@@ -51,10 +51,19 @@ The ```config.json``` file has all the settings to make sure your node listens t
     "lightNode": false,
     "blocksToKeep": 864000,
     "domain" : "",
+    "lightNode": {
+        "enabled": false,
+        "blocksToKeep": 864000,
+        "cleanupInterval": 600000
+    },
     "rpcConfig" : {
         "maxLimit" : 1000,
         "maxOffset" : -1,
-        "logRequests" : false
+        "logRequests" : false,
+        "disabledMethods" : {
+            "blockchain" : ["getBlockRangeInfo"],
+            "contracts" : []
+        }
     },
     "rpcWebsockets" : {
         "enabled" : true,
@@ -67,15 +76,21 @@ Optional config settings which you may wish to edit:
 
 **domain** - if you have a domain name for your node, put the fully qualified domain name here. This information will be returned when status queries are made to your node's API.
 
-**lightNode** - if set to true, your node will run in light configuration. A light node does not keep full transaction & block information, which reduces the disk space requirements for running the software (old blocks & transactions are cleaned up periodically). Note that you can't switch from a light node back to running as a full node later on (you would need to restore from a full node snapshot).
+**lightNode.enabled** - if set to true, your node will run in light configuration. A light node does not keep full transaction & block information, which reduces the disk space requirements for running the software (old blocks & transactions are cleaned up periodically). Note that you can't switch from a light node back to running as a full node later on (you would need to restore from a full node snapshot).
 
-**blocksToKeep** - only used when lightNode = true. Specifies how many recent blocks worth of block data & transactions should be kept by light nodes. Defaults to 30 days worth, assuming a perfect 3 second block time.
+**lightNode.blocksToKeep** - only used when lightNode.enabled = true. Specifies how many recent blocks worth of block data & transactions should be kept by light nodes. Defaults to 30 days worth, assuming a perfect 3 second block time.
+
+**lightNode.cleanupInterval** - only used when lightNode.enabled = true. Amount of time, in ms (default is 600 seconds / 10 minutes), between internal cleanup activity that ensures the light node database does not grow too large.
 
 **rpcConfig.maxLimit** - max results to be returned from a rpc call, default is 1000
 
 **rpcConfig.maxOffset** - maximum allowable offset on a rpc call, with -1 being unlimited, default is -1
 
 **rpcConfig.logRequests** - if set to true, all requests to the json-rpc server will be logged, with IP and the body of the request, default is false
+
+**rpcConfig.disabledMethods.blockchain** - a list of blockchain RPC API methods that are unsupported on this particular node. By default getBlockRangeInfo is disabled, as this is a heavy, processor intensive call that should only be used on private nodes.
+
+**rpcConfig.disabledMethods.contracts** - same as above but for the contracts RPC API calls. By default, all these methods are enabled.
 
 **rpcWebsockets** - see documentation here: https://github.com/hive-engine/hivesmartcontracts/pull/5
 
