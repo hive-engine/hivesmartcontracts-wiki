@@ -48,8 +48,6 @@ The ```config.json``` file has all the settings to make sure your node listens t
     "genesisHiveBlock": 41967000,   // first block that was parsed by the sidechain, needs to be the same on all nodes listening to the sidechain id previously defined
     "witnessEnabled": false,
     "defaultLogLevel": "warn",
-    "lightNode": false,
-    "blocksToKeep": 864000,
     "domain" : "",
     "lightNode": {
         "enabled": false,
