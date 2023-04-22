@@ -85,6 +85,25 @@ Result:
 }
 ```
 
+### getBlockRangeInfo(startBlockNumber, count): get a range of multiple consecutive blocks
+
+This API can be used instead of calling getBlockInfo multiple times. startBlockNumber is the first block to retrieve, and count is how many blocks to retrieve, inclusive of the starting block. Note that count cannot be greater than 1000.
+
+Command:
+```
+{
+    "jsonrpc": "2.0",
+    "method": "getBlockRangeInfo",
+    "params": {
+        "startBlockNumber": BLOCK_NUMBER,
+	"count": NUMBER_OF_BLOCKS
+    },
+    "id": 1
+}
+```
+
+This API is processor intensive, and so is recommended for use on private nodes only. It is disabled by default on most public Engine nodes.
+
 ### getTransactionInfo(txid): retrieve the specified transaction info of the sidechain
 
 Command:
