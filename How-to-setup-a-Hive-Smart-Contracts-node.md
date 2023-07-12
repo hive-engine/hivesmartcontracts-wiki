@@ -88,6 +88,8 @@ Optional config settings which you may wish to edit:
 
 **rpcConfig.maxOffset** - maximum allowable offset on a rpc call, with -1 being unlimited, default is -1
 
+**rpcConfig.maxBatchLength** - max batch size allowed for rpc requests, default is 1
+
 **rpcConfig.logRequests** - if set to true, all requests to the json-rpc server will be logged, with IP and the body of the request, default is false
 
 **rpcConfig.allowArbitraryProject** - if set to true, all projections will be allowed, the default behvaior is to only allow projection values to be 1 or 0, specifying wether to return a field or not
