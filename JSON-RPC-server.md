@@ -354,7 +354,8 @@ Command:
     "params": {
         "contract": "CONTRACT_NAME",
         "table": "TABLE_NAME",
-        "query": {}
+        "query": {},
+        "project" : {}
     },
     "id": 1
 }
@@ -389,7 +390,8 @@ Command:
         "query": {},
         "limit": 20,  // default: 1000
 	"offset": 20, // default: 0
-	"indexes": [], // default: empty, an index is an object { index: string, descending: boolean }
+	"indexes": [], // default: empty, an index is an object { index: string, descending: boolean },
+	"project": {}, // default empty, a project is an object { fieldA: 1, fieldB: fieldA * 2} See MongoDB's project documentation https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/ Please note that only 1,0 are allowed(include/supress a field) as values unless `rpcConfig.allowArbitraryProject` is enabled on the node
     },
     "id": 1
 }
