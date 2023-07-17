@@ -188,9 +188,6 @@ NODE_DOMAIN= Node domain (exclude protocol, so no http(s)://, for example: examp
 #P2PPORT= Forwarded P2P NAT port
 ```
 
-Note, only `NODE_IP` will work as of now, as the witness contract hasn't been updated to support domains.
-
-
 There is a script called `witness_action.js` that can help with a few quick actions. See `node witness_action.js --help` for a list of commands, noting it uses the settings in your .env and config.json files to perform the custom json broadcasts.
 
 Witnesses dashboard where you can also approve witnesses is on tribaldex: https://tribaldex.com/witnesses 
