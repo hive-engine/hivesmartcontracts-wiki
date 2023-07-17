@@ -24,6 +24,8 @@ To install the app, simply follow these steps:
 	- ```npm ci```
 
 ## 3. Configure the node
+Copy the `config.example.json` file to `config.json`.
+
 The ```config.json``` file has all the settings to make sure your node listens to the Hive blockchain and generates the proper genesis block. You shouldn't need to change any of the default config, it can just be used as is. If you are configuring a witness, then additionally set `witnessEnabled` to true, and copy `.env.example` to `.env` to set up your witness settings. Be careful as configuring asks for a witness private signing key in plain text.
 
 (the following file is a pre-configuration that will listen to the sidechain id "mainnet-hive" and will start up a HTTP JSON RPC server listening on port 5000)
@@ -33,7 +35,7 @@ The ```config.json``` file has all the settings to make sure your node listens t
     "chainId": "mainnet-hive",   // the id of the sidechain that the node will listen to
     "rpcNodePort": 5000,   // port of the JSON RPC server that people will use to retrieve data from your node
     "p2pPort": 5001,
-    "databaseURL": "mongodb://localhost:27017",   // url to your MongoDB server
+    "databaseURL": "mongodb://127.0.0.1:27017",   // url to your MongoDB server
     "databaseName": "hsc",   // name of the MongoDB database
     "blocksLogFilePath": "./blocks.log",   // path to a blocks log file (used with the replay function)
     "javascriptVMTimeout": 10000,   // the timeout that will be applied to the JavaScript virtual machine, needs to be the same on all the nodes of the sidechain
@@ -46,7 +48,7 @@ The ```config.json``` file has all the settings to make sure your node listens t
     ],
     "startHiveBlock": 41967000,   // last Hive block parsed by the node
     "genesisHiveBlock": 41967000,   // first block that was parsed by the sidechain, needs to be the same on all nodes listening to the sidechain id previously defined
-    "witnessEnabled": false,
+    "witnessEnabled": true,
     "defaultLogLevel": "warn",
     "domain" : "",
     "lightNode": {
@@ -57,7 +59,9 @@ The ```config.json``` file has all the settings to make sure your node listens t
     "rpcConfig" : {
         "maxLimit" : 1000,
         "maxOffset" : -1,
+        "maxBatchLength" : 1,
         "logRequests" : false,
+        "allowArbitraryProject" : false,
         "disabledMethods" : {
             "blockchain" : ["getBlockRangeInfo"],
             "contracts" : []
@@ -84,7 +88,11 @@ Optional config settings which you may wish to edit:
 
 **rpcConfig.maxOffset** - maximum allowable offset on a rpc call, with -1 being unlimited, default is -1
 
+**rpcConfig.maxBatchLength** - max batch size allowed for rpc requests, default is 1
+
 **rpcConfig.logRequests** - if set to true, all requests to the json-rpc server will be logged, with IP and the body of the request, default is false
+
+**rpcConfig.allowArbitraryProject** - if set to true, all projections will be allowed, the default behvaior is to only allow projection values to be 1 or 0, specifying wether to return a field or not
 
 **rpcConfig.disabledMethods.blockchain** - a list of blockchain RPC API methods that are unsupported on this particular node. By default `getBlockRangeInfo` is disabled, as this is a heavy, processor intensive call that should only be used on private nodes. Note that the `getStatus` API cannot be disabled this way.
 
@@ -131,8 +139,6 @@ https://snap.primersion.com/
 
 https://snap.rishipanthee.com/snapshots/ (mirror of https://snap.primersion.com/)
 
-https://jedigeiss.tech/
-
 snapshots for light nodes:  
 
 https://snap.primersion.com/light/
@@ -165,6 +171,26 @@ So for example, instead of ```https://api.hive-engine.com/rpc/blockchain``` you 
 
 ## 7. Enabling and Approving Witness
 
-There is a script called `witness_action.js` that can help with a few quick actions. See `node witness_action.js --help` for a list of commands, noting it uses the settings in your .env file to perform the custom json broadcasts.
+Moidfy the .env file to have your witness details. 
+
+```
+ACTIVE_SIGNING_KEY= Your hive private active key 
+ACCOUNT= Your hive username
+
+
+# Only use one of the following:
+# NODE_IP= Server's IP(v4 or v6) if using IP
+NODE_DOMAIN= Node domain (exclude protocol, so no http(s)://, for example: example.com)
+
+
+# If your public ports are different from your node config.js ports (requires NAT/port forwarding)
+#RPCNODEPORT= Forwarded RPC NAT port
+#P2PPORT= Forwarded P2P NAT port
+```
+
+Note, only `NODE_IP` will work as of now, as the witness contract hasn't been updated to support domains.
+
+
+There is a script called `witness_action.js` that can help with a few quick actions. See `node witness_action.js --help` for a list of commands, noting it uses the settings in your .env and config.json files to perform the custom json broadcasts.
 
 Witnesses dashboard where you can also approve witnesses is on tribaldex: https://tribaldex.com/witnesses 

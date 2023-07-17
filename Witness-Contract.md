@@ -142,6 +142,13 @@ contains contract parameters such as the current round information.
   * currentWitness = current witness that is expected to propose the current round,
   * blockNumberWitnessChange = block number where the witness will change if the current round has not yet been verified.
   * lastWitnesses = array of previously scheduled proposing witnesses. The last entry is set to the current witness.
+  * numberOfApprovalsPerAccount = Number of approvals an account is allowed to make
+  * numberOfTopWitnesses = Number of witnesses who are ranked as top and are always included in a round
+  * numberOfWitnessSlots = Total number of witnesses in a round
+  * witnessSignaturesRequired = Minimum number of witness signatures required for a round to be verified
+  * maxRoundsMissedInARow = Max number of rounds a witness is allowed to miss in a row before being automatically disabled
+  * maxRoundPropositionWaitingPeriod = Max number of blocks the system will wait for a round proposition by currentWitness
+  * witnessApproveExpireBlocks = After this many blocks without making a single witness vote action, all of user's witness votes will all be revoked
 
 ## witnesses:
 contains information about the registered witnesses.
@@ -149,7 +156,8 @@ contains information about the registered witnesses.
   * account = account of witness.
   * approvalWeight.$numberDecimal = total approval weight for the witness.
   * signingKey = public key used for signing.
-  * IP = IP address of witness.
+  * IP = IP address of witness. (only one of IP or domain will be present)
+  * domain = domain of witness. (only one of IP or domain will be present)
   * RPCPort = RPC port of witness.
   * P2PPort = P2P port of witness.
   * enabled = whether the witness is enabled.

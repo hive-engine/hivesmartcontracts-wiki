@@ -247,6 +247,62 @@ Result:
 }
 ```
 
+### getBlockInfoByHiveBlock(hiveBlockNumber): retrieve ssc block with ref hive block hiveBlockNumber by providing hiveBlockNumber
+
+Command:
+```
+{
+    "jsonrpc": "2.0",
+    "method": "getBlockInfoByHiveBlock",
+    "params": {
+    	"hiveBlockNumber" : HIVE_BLOCK_NUMBER
+    },
+    "id": 1
+}
+```
+
+Result:
+
+```
+{
+    "jsonrpc": "2.0",
+    "id": 0,
+    "result": {
+        "_id": 1,
+        "blockNumber": 1,
+        "refHiveBlockNumber": 41967403,
+        "refHiveBlockId": "02805f2b0965133a9e47b8665eea47fff8186b2c",
+        "prevRefHiveBlockId": "02805f2a1a78cc9e4eed2ef5e23a0745d2310d98",
+        "previousHash": "66e2be521f83eb882b0736054f4e172769e6bcb68303f668799243b4beee8650",
+        "previousDatabaseHash": "9358cdfbc5d508a188506b51b6fbcb2a1a43322bf74179665520b7dc0510f0c7",
+        "timestamp": "2020-03-25T18:59:12",
+        "transactions": [
+            {
+                "refHiveBlockNumber": 41967403,
+                "transactionId": "3398782dae26b26a00c6a2784bbbce10d3112435",
+                "sender": "steemsc",
+                "contract": "hivepegged",
+                "action": "buy",
+                "payload": "{\"recipient\":\"honey-swap\",\"amountHIVEHBD\":\"1.000 HIVE\",\"isSignedWithActiveKey\":true}",
+                "executedCodeHash": "b220418036c5b78431ebd92327e1d14a5caa71039a357fe452c60a457e8e78259f4e5ec54de1c9ca9365646184ee91d80260f795b6dada8a922ddca8ad4b3e10",
+                "hash": "517042930383bb1f578931351489bedcc2ec0bf8d86bae035c03eda117ef1158",
+                "databaseHash": "43a7de40d4d64766cf103347429f150e1b243463e7a050e36c2844c76ba115d8",
+                "logs": "{\"events\":[{\"contract\":\"tokens\",\"event\":\"transfer\",\"data\":{\"from\":\"honey-swap\",\"to\":\"steemsc\",\"symbol\":\"SWAP.HIVE\",\"quantity\":\"0.990\"}}]}"
+            }
+        ],
+        "virtualTransactions": [],
+        "hash": "d19a847de664bd268fd7d8cc6a99bb7110101fb3cb50bccea56657c1eb9f5ae1",
+        "databaseHash": "167c94db87d6366c5825bfcefa84094d692e042b4247c813b4a9d868083dd34e",
+        "merkleRoot": "fbdf7411e7970683a164a49ee50ca8aff185dad5b0f5e977c86a0264cf22a3c0",
+        "round": null,
+        "roundHash": "",
+        "witness": "",
+        "signingKey": "",
+        "roundSignature": ""
+    }
+}
+```
+
 ## 3. The "contracts" endpoint (http://localhost:5000/contracts)
 Available methods:
 
@@ -298,7 +354,8 @@ Command:
     "params": {
         "contract": "CONTRACT_NAME",
         "table": "TABLE_NAME",
-        "query": {}
+        "query": {},
+        "project" : {}
     },
     "id": 1
 }
@@ -333,7 +390,8 @@ Command:
         "query": {},
         "limit": 20,  // default: 1000
 	"offset": 20, // default: 0
-	"indexes": [], // default: empty, an index is an object { index: string, descending: boolean }
+	"indexes": [], // default: empty, an index is an object { index: string, descending: boolean },
+	"project": {}, // default empty, a project is an object { fieldA: 1, fieldB: fieldA * 2} See MongoDB's project documentation https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/ Please note that only 1,0 are allowed(include/supress a field) as values unless `rpcConfig.allowArbitraryProject` is enabled on the node
     },
     "id": 1
 }
@@ -353,5 +411,30 @@ Result:
             "_id": 1
         }
     ]
+}
+```
+
+
+Please note, that you can also add the endpoint to the `method` in the POST body instead of adding it to the URL. For example, the call to `/contracts` with the body:
+```
+{
+    "jsonrpc": "2.0",
+    "method": "getContract",
+    "params": {
+        "name": "CONTRAC_NAME"
+    },
+    "id": 1
+}
+```
+
+can be made to `/` with the body:
+```
+{
+    "jsonrpc": "2.0",
+    "method": "contracts.getContract",
+    "params": {
+        "name": "CONTRAC_NAME"
+    },
+    "id": 1
 }
 ```
