@@ -1,6 +1,6 @@
 ## 1. Environment setup
 - Make sure you have a Linux server to run the node on. Medium specs are fine for now: 4 GB RAM, a dual core CPU, and at least 300 GB free disk space should work great. (For 4G RAM, you will need to add swap space, so recommend 8G RAM) Ubuntu is recommended, though other flavors of Linux will probably also work.
-- Install NodeJS and NPM. Node version 16.15.0+ is required: https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04
+- Install NodeJS and NPM. Node version 18.17.0+ is the minimum version recommended for use (although older versions will likely also work for the time being): https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04
     - If using Node.JS 17+, be sure to use `openssl-legacy-provider` as a node arg
 - Install MongoDB. At least version 4.4.3 is required (that's what production nodes are running): https://docs.mongodb.com/v4.4/administration/install-community/, which needs to have replication enabled: https://docs.mongodb.com/manual/tutorial/convert-standalone-to-replica-set/
     - MongoDB 5.x has been observed to work as well
@@ -17,7 +17,7 @@ To install the app, simply follow these steps:
 - get the files from the repository: 
 	- via the git cli: ```git clone https://github.com/hive-engine/hivesmartcontracts.git```
 
-- cd into the newly created project folder; for Hive Engine, make sure you are on the ```main``` branch. You may consider using a tagged release as well instead to match the primary nodes, in which case you should checkout a release tag e.g. `he_v1.8.1`
+- cd into the newly created project folder; for Hive Engine, make sure you are on the ```main``` branch. You may consider using a tagged release as well instead to match the primary nodes, in which case you should checkout a release tag e.g. `he_v2.0.0`
 	- ```git checkout main```
 
 - in your console type the following command in the folder that contains the files downloaded from the previous step:
@@ -70,6 +70,13 @@ The ```config.json``` file has all the settings to make sure your node listens t
     "rpcWebsockets" : {
         "enabled" : true,
         "port" : 5002
+    },
+    "hashVerificationNode": false,
+    "streamerConfig": {
+        "antiForkBufferMaxSize": 2,
+        "maxQps": 1,
+        "lookaheadBufferSize": 5,
+        "useBlockApi": false
     }
 }
 ```
@@ -99,6 +106,16 @@ Optional config settings which you may wish to edit:
 **rpcConfig.disabledMethods.contracts** - same as above but for the contracts RPC API calls. By default, all these methods are enabled.
 
 **rpcWebsockets** - see documentation here: https://github.com/hive-engine/hivesmartcontracts/pull/5
+
+**hashVerificationNode** - string or false, default value is false. Whether to tail a different hive engine API and check for hash match before committing a block to the DB. Example of a valid value to enable this feature would be `"https://api.hive-engine.com/rpc/blockchain"`.
+
+**streamerConfig.antiForkBufferMaxSize** - integer, default value is 2. The number of blocks to check ahead to confirm same fork before sending a block for processing.
+
+**streamerConfig.maxQps** - integer, default value is 1. Max queries to send at a time per node in config.
+
+**streamerConfig.lookaheadBufferSize** - integer, default value is 5. Number of blocks to fetch at a time using all nodes in config. Note that if any node in the config is unresponsive it can cause the block fetching to stall. If you see noisy errors in the log files about being unable to fetch blocks, reducing this setting may help.
+
+**streamerConfig.useBlockApi** - boolean, default value is false. Whether to use block_api get_block as opposed to condenser_api.get_block (which is deprecated) when fetching blocks from Hive nodes.
 
 For more details about light nodes, see the documentation on the pull request here: https://github.com/hive-engine/steemsmartcontracts/pull/144
 
