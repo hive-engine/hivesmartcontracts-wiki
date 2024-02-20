@@ -58,11 +58,12 @@ Those design principles and other best practices are explained in detail in the 
 
 # Quickstart
 
-1. Make sure you have a Linux server to develop on. Low end specs are fine: 2 GB RAM, a dual core CPU, and at least 10 GB free disk space should work great. Ubuntu is recommended, though other flavors of Linux will probably also work.
+1. Make sure you have a Linux server to develop on. Medium specs are fine for now: 4 GB RAM, a dual core CPU, and at least 300 GB free disk space should work great. (For 4G RAM, you will need to add swap space, so recommend 8G RAM) Ubuntu is recommended, though other flavors of Linux will probably also work.
 
-2. Install NodeJS and NPM. Node version 16 is recommended (must be at least 16.15.0 or higher): https://linuxize.com/post/how-to-install-node-js-on-ubuntu-18.04/
+2. Install NodeJS and NPM. Node version 18.17.0+ is the minimum version recommended for use (although older versions will likely also work for the time being): https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04
+	- If using Node.JS 17+, be sure to use `openssl-legacy-provider` as a node arg
 
-3. Install MongoDB. Version 4.4.3 is required (that's what production nodes are running): https://docs.mongodb.com/v4.4/administration/install-community/, and it needs to have replication enabled: https://docs.mongodb.com/manual/tutorial/convert-standalone-to-replica-set/.
+3. Install MongoDB. At least version 4.4.3 is required (that's what production nodes are running, though MongoDB 5.x has been observed to work as well): https://docs.mongodb.com/v4.4/administration/install-community/, and it needs to have replication enabled: https://docs.mongodb.com/manual/tutorial/convert-standalone-to-replica-set/.
   - To enable replication, you just need to add to the replication config in the mongo config:
     ```
     replication:
@@ -79,9 +80,11 @@ Those design principles and other best practices are explained in detail in the 
 
 6. In your branch, do `npm install`
 
-7. Verify everything is working by running some unit tests. Do `npm run test1` to run tests for the nft smart contract. All tests should pass.
+7. Copy the `config.example.json` file to `config.json`. All the default settings should mostly be fine for dev work. 
 
-8. That's it, you're ready for smart contract dev work!
+8. Verify everything is working by running some unit tests. Do `npm run test1` to run tests for the nft smart contract. All tests should pass.
+
+9. That's it, you're ready for smart contract dev work!
 
 # Parts of a smart contract
 
