@@ -54,13 +54,15 @@ Creates a new "XXX.D" token  A creation fee of 1000 BEED is required.
   
 * parameters:
   * burnRouting (string): defaults to null, but can be changed to a valid hive account name
-  * feePercentage (decimal as string): between 0 and 1, This parametersle controls how much a hive account 
+  * feePercentage (decimal as string): between 0 and 1, This parameter controls how much a hive account how of the new stable token they receive, the the closer to 1 the greater the fee, and the less stable coin a user will receive. 
     
 
 
 
 * Mathematics of feePercentage:
-  Setting a fee percentage of .90 will send 90% of the parent token to the "burnRouting" account, and 10% of the parent token to null. If a user were to burn 40 "parent tokens" this would mean 36 parent tokens would go to "burnRouting" account and 4 tokens would go to null. This only occurs if a token issuer changes the default burnRouting account. 
+  Setting a fee percentage of .90 will set a fee of 90%. If a user was burning 40 units of the parent token they would receive 4 units of the .D stable coin.  The remaining 36 unit would be considered the "fee" causing 36 units of the parent token to route "burnRouting" account, and 4 units of the parent token to null.  Note only the user receives the .D token and the burn route receive the parent token. 
+
+  Conversely, setting a fee percentage of .10 will set a fee of 10%. If a user was burning 40 units of the parent token they would receive 36 units of the .D stable coin.  The 4 unit would be considered the "fee" causing 4 units of the parent token to route "burnRouting" account, and 36 units of the parent token to null.  Note only the user receives the .D token and the burn route receive the parent token. 
 
 
 
@@ -112,8 +114,8 @@ After the initial creation of the child .D token. This action allows the token i
     "contractAction": "updateBurnPair",
     "contractPayload": {
         "symbol": "TKN",         //parent token
-        "burnRouting": "mydaoaccount",  
-        "feePercentage": ".01", 
+        "burnRouting": "thedao",  
+        "feePercentage": ".1", 
         "isSignedWithActiveKey": true 
     }
 }
@@ -147,7 +149,7 @@ After a .D token is created and the token issue established appropriate market p
 ```
 
 
-A successful action will emit a "burndollar" event, e.g.
+A successful action will emit a "burndollar" event, e.g. // fee set to .9
 ```
 {
     "contract": "burndollar",
@@ -168,17 +170,22 @@ A successful action will emit a "burndollar" event, e.g.
 Note: all tables below have an implicit _id field that provides a unique numeric identifier for each particular object in the database. Most of the time the _id field is not important, so we have omitted it from table descriptions.
 
 ## params:
-contains contract parameters such as the current fees
+contains contract parameters for the burndollar contract
 * fields
-  * feePerTransaction = the cost in BEE per transaction
-  * transactionPerBlock = number of maximum transaction in each block per airdrop
-  * maxAirdropsPerBlock = number of maximum airdrops in each block
+  * issueDTokenFee = the cost in BEED for creating a XXX.d token
+  * updateParamsFee = the cost in BEED of updating the burnRouting or feePercentage.  // fields available also available upon creation
+  * maxAirdropsPerBlock = the cost in BEED of converting any amount of a parent token to the stable coin
+  * minAmountConvertible = the minimal quantity a user must convert of a parent in the stable coin
+  * dTokenToIssuer = the stable coins issue to the stable coin owner upon creation, intended to be used to create market pools
+  * burnToken = the token to be burned to call actions
 
-## pendingAirdrops:
-contains information about pending airdrops
+
+## burnpair:
+contains information about the parent and the child token.
 * fields
-  * airdropId = id of airdrop (unique)
-  * symbol = symbol of token to airdrop
-  * type = distribution type
-  * list = list of accounts to transact
-  * blockNumber = block number in which airdrop was initiated
+  * issuer = the hive account the owns the parent and newly created stable token
+  * symbol = symbol of the stable token
+  * precision = the precision of the parent token
+  * parentSymbol = the symbol of the parent token
+  * burnRouting = the hive account the fee will route to, if any
+  * feePercentage = The fee which controls how much a user receives when the convert a parent token to the stable token
