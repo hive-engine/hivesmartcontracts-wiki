@@ -17,27 +17,34 @@ Documentation written by [drewlongshot](https://github.com/BostonTechie)
 
 # Introduction
 
-The burndollar contract allows a token issuer of a who to create a related XXX.D token in a parent / child type relationship. The contract allows users to burn based on a percentage of the parent token in order to get the child "XXX.D" token. In addition, the token issuer can route has the choice to route the burn token to a DAO, or other accounts, if they so wish. The name of the child token will always be the name of the parent token with "stablecoin" appended to the end of the name. The symbol of the new token will always be the symbol of the parent token with ".D" appended to the symbol.
+The burndollar contract allows a token issuer to create a related stablecoin in a parent/child relationship. Users can burn parent tokens based on a percentage to receive the child "XXX.D" stable token. The issuer may route the fee portion of the parent token to any active Hive account, including a DAO.
+
+* The name of the child token will be the parent token name with "stablecoin" appended.
+* The symbol of the child token will be the parent token symbol with ".D" appended.
+
 
 # Requirements
 
-In order for a user to create a XXX.D token the user must be using a hive account that has already created a token, meaning they must be the token issuer. 
+To create a XXX.D token, the user must have a Hive account that has already issued a token.
 
-Once the .D token is created a token issuer will automatically be issued a set number of the new .D token. This automatic issuance is designed to be used so to create marketpools, to enhance the stability of said .D token. Two marketpools are required in order for all other users to be able to burn the parent token and receive a child token. 
+Once the .D token is created, the issuer is automatically granted a fixed number of the new .D token. This issuance is intended for creating market pools to stabilize the token. Two market pools are required for users to burn the parent token and receive the child token.
 
-One market pool must be created with one of the following stable coins:
+
+## Stablecoin Pool
+ A market pool must be created with one of the following stable coins:
 
  SWAP.HBD, SWAP.USDT, SWAP.DAI, or SWAP.USDC.  
 
- the other side of the market pool can be the parent or the child token. The value of the market swap must be approximately $500 as a minimum. Multiple pools can be created with stable coins but at least one pool must remain higher than $500 dollars of market value. 
+The other side of the pool can be either the parent or child token. The pool must have a minimum market value of approximately $500. Multiple pools may be created, but at least one must maintain this value. 
 
-The second market pool must be a pool of the parent token with the child XXX.D token. The value of this pool must stay at or above approximately $500 of market value.  
+## Parent / StableCoin pool
+A second market pool must pair the parent token with the child XXX.D token. This pool must also maintain a market value of approximately $500 or more.
 
 # Fees
 
-To create a .D token the fee is 1000 BEED
-For a user to update the parameters , after the initial creation is 100 BEED
-To convert any quantity of a parent token to a .D token is 1 BEED
+* To create a .D token the fee is 1000 BEED
+* For a user to update the parameters , after the initial creation is 100 BEED
+* To convert any quantity of a parent token to a .D token is 1 BEED
 
 # Actions available:
 
@@ -46,24 +53,28 @@ To convert any quantity of a parent token to a .D token is 1 BEED
 Creates a new "XXX.D" token  A creation fee of 1000 BEED is required.
 
 * requires active key: yes
-* can be called by: the owner/ issuer hive account of a parent token that wishes to create a stablecoin token
+* Callable by: Issuer of the parent token
+
 
 * fields
-   * symbol (string): The parent token to create the child XXX.D token, parent token must already exist. 
-   * precision: The child .D token automatically receives the precision of the parent token upon creation.  
+   * symbol (string): The parent token symbol to create the child XXX.D token
+   *  precision: Inherited from parent token
+ 
   
 * parameters:
-  * burnRouting (string): defaults to null, but can be changed to a valid hive account name
-  * feePercentage (decimal as string): between 0 and 1, This parameter controls how much a hive account how of the new stable token they receive, the the closer to 1 the greater the fee, and the less stable coin a user will receive. 
+  * burnRouting (string): defaults to null, but can be changed to a valid Hive account name
+  * feePercentage (decimal as string): between 0 and 1, This parameter controls how much of the stable coin will be issued to a Hive account. 
     
-
-
-
 * Mathematics of feePercentage:
-  Setting a fee percentage of .90 will set a fee of 90%. If a user was burning 40 units of the parent token they would receive 4 units of the .D stable coin.  The remaining 36 unit would be considered the "fee" causing 36 units of the parent token to route "burnRouting" account, and 4 units of the parent token to null.  Note only the user receives the .D token and the burn route receive the parent token. 
-
-  Conversely, setting a fee percentage of .10 will set a fee of 10%. If a user was burning 40 units of the parent token they would receive 36 units of the .D stable coin.  The 4 unit would be considered the "fee" causing 4 units of the parent token to route "burnRouting" account, and 36 units of the parent token to null.  Note only the user receives the .D token and the burn route receive the parent token. 
-
+``` "feePercentage": ".9", ```
+ - Burn 40 units of parent token → user receives 4 units of .D token
+ - 36 units of parent token route to burnRouting (if any)
+ - 4 units of parent token route to null
+ 
+``` "feePercentage": ".1", ```
+  - Burn 40 units of parent token → user receives 36 units of .D token
+  - 4 units of parent token route to burnRouting (if any)
+ - 36 units of parent token route to null
 
 
 * examples:  
@@ -91,8 +102,8 @@ A successful action will emit a "burndollar" event, e.g.
 }
 ```
 
-After being a new .D token is successfully created the token hive account will automatically be issued 1000 units of the new .D token. Which is to be utilized in the creation of market pools as discussed in the #[Requirements](#requirements) section . 
-
+Upon successful creation, the issuer receives 1000 units of the new .D token for market pool creation as discussed in the 
+#[Requirements](#requirements) section. 
 
 ## updateBurnPair:
 
@@ -123,17 +134,16 @@ After the initial creation of the child .D token. This action allows the token i
   
 ## convert:
 
-After a .D token is created and the token issue established appropriate market pools as discussed in the #[Requirements](#requirements) section . Other hive accounts will be able to convert the parent token into the new .D token. The fee for any size conversion is 1 BEED. The efficiency and the routing  is determined by the creator of the .D token, see detailed explanation in ##[createTokenD](##createTokenD) section. 
-
-
+Allows users to convert parent tokens into the child .D token. Requires a fee of 1 BEED.
 
 * requires active key: yes
+* market pools required // #[Requirements](#requirements)
 
 * fields
   * symbol = symbol of the parent token to be burned, then hive account to be issued .D stable token
 
 * parameters:
-  * quantity (number as string): quantity of parent token the hive account wishes to be burned to receive .D token
+  * quantity (number as string): quantity of parent token the to be burned
 
 * examples:  
 ```
@@ -167,7 +177,8 @@ A successful action will emit a "burndollar" event, e.g. // fee set to .9
 
 ```
 # Tables available:
-Note: all tables below have an implicit _id field that provides a unique numeric identifier for each particular object in the database. Most of the time the _id field is not important, so we have omitted it from table descriptions.
+All tables include an implicit _id field (unique identifier), omitted for brevity
+
 
 ## params:
 contains contract parameters for the burndollar contract
@@ -176,7 +187,7 @@ contains contract parameters for the burndollar contract
   * updateParamsFee = the cost in BEED of updating the burnRouting or feePercentage.  // fields available also available upon creation
   * maxAirdropsPerBlock = the cost in BEED of converting any amount of a parent token to the stable coin
   * minAmountConvertible = the minimal quantity a user must convert of a parent in the stable coin
-  * dTokenToIssuer = the stable coins issue to the stable coin owner upon creation, intended to be used to create market pools
+  * dTokenToIssuer = the stable coins issued to the stable coin owner upon creation, intended to be used to create market pools
   * burnToken = the token to be burned to call actions
 
 
