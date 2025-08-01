@@ -191,4 +191,4 @@ contains information about the parent and the child token.
   * precision = the precision of the parent token
   * parentSymbol = the symbol of the parent token
   * burnRouting = the hive account the fee will route to, if any
-  * feePercentage = The fee which controls how much a user receives when the convert a parent token to the stable token
+  * feePercentage = The fee which controls how much a user receives when converting a parent token to the stable token
