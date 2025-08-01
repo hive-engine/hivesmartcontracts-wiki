@@ -51,7 +51,7 @@ A second market pool must pair the parent token with the child XXX.D token. This
 Creates a new "XXX.D" token  A creation fee of 1000 BEED is required.
 
 * requires active key: yes
-* Callable by: Issuer of the parent token
+* Callable by: owner of the parent token
 
 * fields
    * symbol (string): The parent token symbol to create the child XXX.D token
@@ -105,6 +105,7 @@ Upon successful creation, the issuer receives 1000 units of the new .D token for
 After the initial creation of the child .D token. This action allows the token issuer to update two parameters if needed. The fee for doing so is 100 BEED.
 
 * requires active key: yes
+* Callable by: owner of the parent token
 
 * fields
   * symbol = symbol of the parent token where the parameters are being updated
