@@ -13,7 +13,7 @@ Documentation written by [drewlongshot](https://github.com/BostonTechie)
   * [convert](#convert)
 * [Tables available](#tables-available)
   * [params](#params)
-  * [pendingAirdrops](#pendingairdrops)
+  * [burnpair](#burnpair)
 
 # Introduction
 
