@@ -33,7 +33,7 @@ Once the .D token is created, the issuer is automatically granted a fixed number
 
  SWAP.HBD, SWAP.USDT, SWAP.DAI, or SWAP.USDC.  
 
-The other side of the pool can be either the parent or child token. The pool must have a minimum market value of approximately $500. Multiple pools may be created, but at least one must maintain this value. 
+The other side of the pool can be either the parent or child token. The pool must have a minimum market value of approximately $50 or more. Multiple pools may be created, but at least one must maintain this minimal value. 
 
 ## Parent / Child (XXX.D) pool
 A second market pool must pair the parent token with the child XXX.D token. This pool must also maintain a market value of approximately $500 or more.
