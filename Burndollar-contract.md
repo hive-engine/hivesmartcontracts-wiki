@@ -22,13 +22,11 @@ The burndollar contract allows a token issuer to create a related stablecoin in 
 * The name of the child token will be the parent token name with "stablecoin" appended.
 * The symbol of the child token will be the parent token symbol with ".D" appended.
 
-
 # Requirements
 
 To create a XXX.D token, the user must have a Hive account that has already issued a token.
 
 Once the .D token is created, the issuer is automatically granted a fixed number of the new .D token. This issuance is intended for creating market pools to stabilize the token. Two market pools are required for users to burn the parent token and receive the child token.
-
 
 ## Stablecoin Pool
  A market pool must be created with one of the following stable coins:
@@ -55,12 +53,10 @@ Creates a new "XXX.D" token  A creation fee of 1000 BEED is required.
 * requires active key: yes
 * Callable by: Issuer of the parent token
 
-
 * fields
    * symbol (string): The parent token symbol to create the child XXX.D token
    *  precision: Inherited from parent token
  
-  
 * parameters:
   * burnRouting (string): defaults to null, but can be changed to a valid Hive account name
   * feePercentage (decimal as string): between 0 and 1, This parameter controls how much of the stable coin will be issued to a Hive account. 
@@ -75,7 +71,6 @@ Creates a new "XXX.D" token  A creation fee of 1000 BEED is required.
   - Burn 40 units of parent token → user receives 36 units of .D token
   - 4 units of parent token route to burnRouting (if any)
  - 36 units of parent token route to null
-
 
 * examples:  
 ```
@@ -158,7 +153,6 @@ Allows users to convert parent tokens into the child .D token. Requires a fee of
 }
 ```
 
-
 A successful action will emit a "burndollar" event, e.g. // fee set to .9
 ```
 {
@@ -179,7 +173,6 @@ A successful action will emit a "burndollar" event, e.g. // fee set to .9
 # Tables available:
 All tables include an implicit _id field (unique identifier), omitted for brevity
 
-
 ## params:
 contains contract parameters for the burndollar contract
 * fields
@@ -189,7 +182,6 @@ contains contract parameters for the burndollar contract
   * minAmountConvertible = the minimal quantity a user must convert of a parent in the stable coin
   * dTokenToIssuer = the stable coins issued to the stable coin owner upon creation, intended to be used to create market pools
   * burnToken = the token to be burned to call actions
-
 
 ## burnpair:
 contains information about the parent and the child token.
