@@ -6,6 +6,8 @@ Documentation written by [drewlongshot](https://github.com/BostonTechie)
 
 * [Introduction](#introduction)
 * [Requirements](#requirements)
+  * [Stablecoin Pool](#stablecoin-pool)
+  * [Parent Child Pool](#parent-child-pool)
   * [Fees](#fees)
 * [Actions available](#actions-available)
   * [createTokenD](#createTokenD)
@@ -35,7 +37,7 @@ Once the .D token is created, the issuer is automatically granted a fixed number
 
 The other side of the pool can be either the parent or child token. The pool must have a minimum market value of approximately $500 or more. Multiple pools may be created, but at least one must maintain this minimal value. 
 
-## Parent / Child (XXX.D) pool
+## Parent Child Pool
 A second market pool must pair the parent token with the child XXX.D token. This pool must also maintain a market value of approximately $500 or more.
 
 # Fees
@@ -55,7 +57,7 @@ Creates a new "XXX.D" token  A creation fee of 1000 BEED is required.
 
 * fields
    * symbol (string): The parent token symbol to create the child XXX.D token
-   *  precision: Inherited from parent token
+   * precision: Inherited from parent token
  
 * parameters:
   * burnRouting (string): defaults to null, but can be changed to a valid Hive account name
@@ -63,14 +65,14 @@ Creates a new "XXX.D" token  A creation fee of 1000 BEED is required.
     
 * Mathematics of feePercentage:
 ``` "feePercentage": ".9", ```
- - Burn 40 units of parent token → user receives 4 units of .D token
- - 36 units of parent token route to burnRouting (if any)
- - 4 units of parent token route to null
+ * Burn 40 units of parent token → user receives 4 units of .D token
+ * 36 units of parent token route to burnRouting (if any)
+ * 4 units of parent token route to null
  
 ``` "feePercentage": ".1", ```
-  - Burn 40 units of parent token → user receives 36 units of .D token
-  - 4 units of parent token route to burnRouting (if any)
- - 36 units of parent token route to null
+ * Burn 40 units of parent token → user receives 36 units of .D token
+ * 4 units of parent token route to burnRouting (if any)
+ * 36 units of parent token route to null
 
 * examples:  
 ```
