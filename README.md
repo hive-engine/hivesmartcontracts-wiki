@@ -59,3 +59,5 @@
 [NFT Auctions Contract](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/master/NFT-Auction-Contract.md)
 
 [Comments Contract](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/master/Comment-Contract.md)
+
+[Burndollar Contract](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/master/Burndollar-contract.md)
