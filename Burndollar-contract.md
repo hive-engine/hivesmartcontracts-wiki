@@ -62,31 +62,6 @@ Creates a new "XXX.D" token  A creation fee of 1000 BEED is required.
 * parameters:
   * burnRouting (string): defaults to null, but can be changed to a valid Hive account name
   * feePercentage (decimal as string): between 0 and 1, This parameter controls how much of the stable coin will be issued to a Hive account. 
-    
-* Mathematics of feePercentage:
-``` "feePercentage": ".9", ```
- * Burn 40 units of parent token → user receives 4 units of .D token
- * 36 units of parent token route to burnRouting (if any)
- * 4 units of parent token route to null
- 
-``` "feePercentage": ".1", ```
- * Burn 40 units of parent token → user receives 36 units of .D token
- * 4 units of parent token route to burnRouting (if any)
- * 36 units of parent token route to null
-
-* examples:  
-```
-{
-    "contractName": "burndollar",
-    "contractAction": "createTokenD",
-    "contractPayload": {
-        "symbol": "TKN",         //parent token 
-        "burnRouting": "whale",  // needed if null is not desired
-        "feePercentage": ".9", 
-        "isSignedWithActiveKey": true 
-    }
-}
-```
 
 A successful action will emit a "burndollar" event, e.g.
 ```
@@ -94,13 +69,49 @@ A successful action will emit a "burndollar" event, e.g.
     "contract": "burndollar",
     "event": "issued new token dollar stablecoin",
     "data": {
-        convertPercentage: '.9', feeRouting: 'whale', dSymbol: 'TKN.D' 
+        convertPercentage: '.1', feeRouting: 'whale', dSymbol: 'TKN.D' 
     }
 }
 ```
 
 Upon successful creation, the issuer receives 1000 units of the new .D token for market pool creation as discussed in the 
-#[Requirements](#requirements) section. 
+[Requirements](#requirements) section. 
+
+
+* Mathematics of feePercentage:
+Say a token is created with a feePercentage of .1
+```
+{
+    "contractName": "burndollar",
+    "contractAction": "createTokenD",
+    "contractPayload": {
+        "symbol": "TKN",         //parent token 
+        "burnRouting": "whale",  // needed if null is not desired
+        "feePercentage": ".1", 
+        "isSignedWithActiveKey": true 
+    }
+}
+```
+If a user burns 4000 units of token (at $1 price) then the routing account balance would receive:
+```
+{
+  "account": "whale",
+  "symbol": 'TKN',
+  "balance": '400.000',
+}
+```
+
+The user initiated the transaction would receive:
+
+```
+{
+  "account": "user",
+  "symbol": 'TKN.D',
+  "balance": '3600',
+}
+```
+
+
 
 ## updateBurnPair:
 
@@ -114,7 +125,7 @@ After the initial creation of the child .D token. This action allows the token i
 
 * parameters:
   * burnRouting (string): defaults to null, but can be change to a valid hive account name
-  * feePercentage (decimal as string): between 0 and 1  see detailed explanation in ##[createTokenD](##createTokenD) section.
+  * feePercentage (decimal as string): between 0 and 1  see detailed explanation in [createTokenD](#createTokenD) section.
 
   * examples:  
 ```
@@ -135,7 +146,7 @@ After the initial creation of the child .D token. This action allows the token i
 Allows users to convert parent tokens into the child .D token. Requires a fee of 1 BEED.
 
 * requires active key: yes
-* market pools required // #[Requirements](#requirements)
+* market pools required [Requirements](#requirements)
 
 * fields
   * symbol = symbol of the parent token to be burned, then hive account to be issued .D stable token
