@@ -197,21 +197,27 @@ Disable or enable a mining pool. Lotteries will not occur if not active. No fee 
 ```
 
 # Interface Integration
+## Swap Fee
+The contract applies a fixed **0.25% swap fee** on all trades via `tradeFeeMul = 0.9975` (set in contract params). This multiplier must be included in any client-side quote estimation.
+
 ## Determining minimum amounts
-To estimate the minimum token amount required to get an exact number of tokens out of a swap (```exactOutput```):
+To estimate the amount of tokens required to receive an exact number of tokens out of a swap (```exactOutput```):
 ```
+  const tradeFeeMul = '0.9975'; // 0.25% swap fee
   const num = api.BigNumber(liquidityIn).times(amountOut);
-  const den = api.BigNumber(liquidityOut).minus(amountOut);
+  const den = api.BigNumber(liquidityOut).minus(amountOut).times(tradeFeeMul);
   const amountIn = num.dividedBy(den);
 ```
-To estimate the minimum token amount received when sending an exact number of tokens into a swap (```exactInput```):
+To estimate the amount of tokens received when sending an exact number of tokens into a swap (```exactInput```):
 ```
-  const num = api.BigNumber(amountIn).times(liquidityOut);
-  const den = api.BigNumber(liquidityIn).plus(amountIn);
+  const tradeFeeMul = '0.9975'; // 0.25% swap fee
+  const amountInWithFee = api.BigNumber(amountIn).times(tradeFeeMul);
+  const num = api.BigNumber(amountInWithFee).times(liquidityOut);
+  const den = api.BigNumber(liquidityIn).plus(amountInWithFee);
   const amountOut = num.dividedBy(den);
 ```
 
-The trader's tolerage to slippage in percent should be determined to set the value for ```minAmountOut``` or ```maxAmountIn``` depending on trade direction.
+The trader's tolerance to slippage in percent should be determined to set the value for ```minAmountOut``` or ```maxAmountIn``` depending on trade direction.
 
 ## Adding liquidity
 To ensure that the addition of new liquidity doesn't move the price, a user can only add to both tokens in the pair in quantities that maintain the same price.
