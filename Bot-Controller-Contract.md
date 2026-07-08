@@ -2,68 +2,68 @@ Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
 
 # Table of Contents
 
-* [Introduction](#introduction)
-  * [Market Maker Bot](#market-maker-bot)
-  * [Basic vs Premium Models](#basic-vs-premium-models)
-  * [Order Strategies](#order-strategies)
-    * [Wall Nestling](#wall-nestling)
-  * [Purpose of the Bot Controller](#purpose-of-the-bot-controller)
-* [Account Management](#account-management)
-  * actions:
-  * [register](#register)
-  * [upgrade](#upgrade)
-  * [turnOff](#turnoff)
-  * [turnOn](#turnon)
-* [Market Management](#market-management)
-  * actions:
-  * [addMarket](#addmarket)
-  * [updateMarket](#updatemarket)
-  * [removeMarket](#removemarket)
-  * [disableMarket](#disablemarket)
-  * [enableMarket](#enablemarket)
-* [Tables available](#tables-available)
-  * [params](#params)
-  * [users](#users)
-  * [markets](#markets)
+- [Introduction](#introduction)
+  - [Market Maker Bot](#market-maker-bot)
+  - [Basic vs Premium Models](#basic-vs-premium-models)
+  - [Order Strategies](#order-strategies)
+    - [Wall Nestling](#wall-nestling)
+  - [Purpose of the Bot Controller](#purpose-of-the-bot-controller)
+- [Account Management](#account-management)
+  - actions:
+  - [register](#register)
+  - [upgrade](#upgrade)
+  - [turnOff](#turnoff)
+  - [turnOn](#turnon)
+- [Market Management](#market-management)
+  - actions:
+  - [addMarket](#addmarket)
+  - [updateMarket](#updatemarket)
+  - [removeMarket](#removemarket)
+  - [disableMarket](#disablemarket)
+  - [enableMarket](#enablemarket)
+- [Tables available](#tables-available)
+  - [params](#params)
+  - [users](#users)
+  - [markets](#markets)
 
-# Introduction
+## Introduction
 
-## Market Maker Bot
+### Market Maker Bot
 
-The botcontroller smart contract is one half of the market maker bot system (the other half being the marketmaker smart contract). This is a bot that any user on Steem Engine or Hive Engine can register for. The contract provides a range of settings configurable by market which will control its trading strategies. Individual users can modify these settings at will. Here are the major behavioral characteristics of the bot:
+The botcontroller smart contract is one half of the market maker bot system (the other half being the marketmaker smart contract). This is a bot that any Hive Engine user can register for. The contract provides a range of settings configurable by market which will control its trading strategies. Individual users can modify these settings at will. Here are the major behavioral characteristics of the bot:
 
-* The bot is **not** designed to work with NFTs, only regular tokens.
+- The bot is **not** designed to work with NFTs, only regular tokens.
 
-* The market maker is not a trading bot in the sense of something that attempts to execute strategies based on technical analysis of charting patterns (i.e. buy low / sell high). Rather, it attempts to make money by **playing the order book spreads** (place orders on both buy & sell side, profit on the difference between buy / sell prices).
+- The market maker is not a trading bot in the sense of something that attempts to execute strategies based on technical analysis of charting patterns (i.e. buy low / sell high). Rather, it attempts to make money by **playing the order book spreads** (place orders on both buy & sell side, profit on the difference between buy / sell prices).
 
-* The market maker is not a taker (i.e. will not hit open orders). Rather, it is a maker (i.e. will only place orders which others must hit).
+- The market maker is not a taker (i.e. will not hit open orders). Rather, it is a maker (i.e. will only place orders which others must hit).
 
-* For now there are no performance analytics; individual users need to proactively monitor performance and adjust configuration or stop using the bot if they judge it is not performing optimally.
+- For now there are no performance analytics; individual users need to proactively monitor performance and adjust configuration or stop using the bot if they judge it is not performing optimally.
 
-## Basic vs Premium Models
+### Basic vs Premium Models
 
 The market maker supports a basic mode and a premium mode that requires users to stake tokens. Differences between them are as follows (this list may be expanded over time):
 
-Feature | Basic | Premium
----- | ---- | ----
-Cost | 100 ENG/BEE | another 100 ENG/BEE fee + 1000 ENG/BEE staked
-Duration* | can be used for a total time of 2 weeks, then requires a 2 week "cooldown" before being used again | no usage restrictions while premium is active
-Markets | can only trade on one market pair at a time, must have 200 ENG/BEE staked to configure a market | can trade on unlimited markets, must have an additional 200 ENG/BEE staked on top of the 1000 base amount, per market pair
-Order Strategy | tries to keep orders on top of the book | tries to keep orders on top of the book<br><br>OR<br><br>[wall nestling](#wall-nestling)<br><br>OR<br><br>additional strategies TBD
-Change Settings | 1 ENG/BEE to adjust settings (turning off & on is free) | can adjust settings any time free of charge
-Tick Speed** | 10 minutes | 5 minutes 
+| Feature         | Basic                                                                                              | Premium                                                                                                                             |
+| --------------- | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Cost            | 100 ENG/BEE                                                                                        | another 100 ENG/BEE fee + 1000 ENG/BEE staked                                                                                       |
+| Duration*       | can be used for a total time of 2 weeks, then requires a 2 week "cooldown" before being used again | no usage restrictions while premium is active                                                                                       |
+| Markets         | can only trade on one market pair at a time, must have 200 ENG/BEE staked to configure a market    | can trade on unlimited markets, must have an additional 200 ENG/BEE staked on top of the 1000 base amount, per market pair          |
+| Order Strategy  | tries to keep orders on top of the book                                                            | tries to keep orders on top of the book<br><br>OR<br><br>[wall nestling](#wall-nestling)<br><br>OR<br><br>additional strategies TBD |
+| Change Settings | 1 ENG/BEE to adjust settings (turning off & on is free)                                            | can adjust settings any time free of charge                                                                                         |
+| Tick Speed**    | 10 minutes                                                                                         | 5 minutes                                                                                                                           |
 
 &ast; **Special note for duration:** when basic service is used, duration starts at 2 weeks and decreases whenever the smart contract updates state. This gradual usage of time stops if the user turns off bot service, and resumes when bot service is re-enabled. When the duration remaining hits 0, service will be suspended until the cooldown period elapses. At end of cooldown, duration is reset and the user is free to re-enable the service.
 
 &ast;&ast; **Tick speed definition:** the rate at which the market maker bot updates orders in response to changing market conditions. When the bot ticks, it attempts to update as many orders as it can, but in some periods of high activity it may delay ticking some accounts so that blockchain processing is not slowed down. Thus the tick speed should be regarded as a "best attempt", not a guarantee, and your account may tick slower depending on overall system conditions at the time. In such cases, premium service accounts will be prioritized for faster ticking.
 
-## Order Strategies
+### Order Strategies
 
 Basic service allows only one simple strategy for placing orders: the bot will attempt to keep one order on the top of the buy book, and one order on the top of the sell book. This behavior can be tweaked to adapt to market conditions using several configuration settings [detailed below.](#addmarket)
 
 Premium service allows for the following additional order strategies to be used:
 
-### Wall Nestling
+#### Wall Nestling
 
 This order strategy still places a single order on the buy book and a single order on the sell book, but it can be used to place the orders in front of walls (defined as very large orders set by so-called whale accounts). So orders will be placed some distance back from the top of the book, allowing you to capture profits from larger price movements. This technique is also less risky & more profitable in situations where a market has small spreads. To use this strategy, you configure separate wall sizes for the bide side & ask side. The bot will start at the top of the book and count order quantities, moving back down the book until the sum of quantities is equal to or greater than the configured wall size. At that point, the bot will stop and place an order above the order that hit your size threshold.
 
@@ -71,25 +71,31 @@ Example: let's say the first 4 orders on the buy book have the following quantit
 
 **Settings used by this strategy:** all settings for basic service apply, plus placeAtBidWall and placeAtSellWall - [see details below.](#addmarket)
 
-## Purpose of the Bot Controller
+### Purpose of the Bot Controller
 
-The botcontroller smart contract provides the account management scaffolding of the market maker, separating out configuration data from the actual logic used to place orders (which is contained in the marketmaker smart contract). The botcontroller smart contract provides actions for doing things such as registering a user for the market maker system, upgrading users to premium service, adding/removing/updating market trading configuration, and enabling/disabling the bot for users. In addition, this contract contains all the logic for managing fees & cooldowns as described above. 
+The botcontroller smart contract provides the account management scaffolding of the market maker, separating out configuration data from the actual logic used to place orders (which is contained in the marketmaker smart contract). The botcontroller smart contract provides actions for doing things such as registering a user for the market maker system, upgrading users to premium service, adding/removing/updating market trading configuration, and enabling/disabling the bot for users. In addition, this contract contains all the logic for managing fees & cooldowns as described above.
 
-# Actions available:
-## Account Management
+## Actions available
+
+### Account Management
+
 These actions affect the state of your account.
-### register:
-Registers a Steem or Hive account to use the market maker system. A registration fee of 100 ENG or BEE is required. Once registered, an account stays registered permanently and cannot be unregistered (although trading for an account can always be turned off if desired).
+
+#### register
+
+Registers a Hive account to use the market maker system. A registration fee of 100 ENG or BEE is required. Once registered, an account stays registered permanently and cannot be unregistered (although trading for an account can always be turned off if desired).
 
 **Important Note:** registering an account gives implicit consent that the account owner authorizes the Engine platform to place market orders on the account owner's behalf, autonomously without requiring explicit approval of each order. Furthermore, this also represents acknowledgement that the account owner agrees not to hold the Engine platform responsible for any negative financial impact on the account owner that results directly or indirectly from use of the market maker system, for any reason including but not limited to bugs in the smart contract, improper trading configuration, or disadvantageous market movements.
-* requires active key: yes
 
-* can be called by: Steem or Hive account
+- requires active key: yes
 
-* parameters: none, the calling account will be the one registered
+- can be called by: Hive account
 
-* example:
-```
+- parameters: none, the calling account will be the one registered
+
+- example:
+
+```json
 {
     "contractName": "botcontroller",
     "contractAction": "register",
@@ -97,9 +103,10 @@ Registers a Steem or Hive account to use the market maker system. A registration
 }
 ```
 
-A successful register action will emit a "register" event: ``account``
+A successful register action will emit a "register" event: `account`
 example:
-```
+
+```json
 {
     "contract": "botcontroller",
     "event": "register",
@@ -109,7 +116,8 @@ example:
 }
 ```
 
-### upgrade:
+#### upgrade
+
 Upgrades a previously registered account to premium service. An upgrade fee of 100 ENG or BEE is required and the account must have at least 1000 ENG or BEE staked. Some things to note:
 
 1. ENG or BEE that is in the process of being unstaked will **not** count toward the staking requirement of 1000 tokens.
@@ -119,14 +127,15 @@ Upgrades a previously registered account to premium service. An upgrade fee of 1
 
 If an account loses premium status later on, there may also be secondary side effects. For instance, premium users are allowed to have unlimited markets configured for bot trading, but basic service allows only one. So if you lose premium status but have multiple markets configured, they will all be disabled until you have removed the extra markets or upgraded to premium again.
 
-* requires active key: yes
+- requires active key: yes
 
-* can be called by: previously registered Steem or Hive account
+- can be called by: previously registered Hive account
 
-* parameters: none, the calling account will be the one upgraded
+- parameters: none, the calling account will be the one upgraded
 
-* example:
-```
+- example:
+
+```json
 {
     "contractName": "botcontroller",
     "contractAction": "upgrade",
@@ -134,9 +143,10 @@ If an account loses premium status later on, there may also be secondary side ef
 }
 ```
 
-A successful upgrade action will emit an "upgrade" event: ``account``
+A successful upgrade action will emit an "upgrade" event: `account`
 example:
-```
+
+```json
 {
     "contract": "botcontroller",
     "event": "upgrade",
@@ -146,17 +156,19 @@ example:
 }
 ```
 
-### turnOff:
+#### turnOff
+
 Completely disables an account. While disabled, the market maker will not place any orders on behalf of this account. However any existing orders will stay in place and need to be managed manually by the user. Also, time spent disabled does not count toward the usage time of a basic service account (see "special note for duration" in [Basic vs Premium Models](#basic-vs-premium-models) section above).
 
-* requires active key: yes
+- requires active key: yes
 
-* can be called by: previously registered Steem or Hive account
+- can be called by: previously registered Hive account
 
-* parameters: none, the calling account will be the one turned off
+- parameters: none, the calling account will be the one turned off
 
-* example:
-```
+- example:
+
+```json
 {
     "contractName": "botcontroller",
     "contractAction": "turnOff",
@@ -164,9 +176,10 @@ Completely disables an account. While disabled, the market maker will not place 
 }
 ```
 
-A successful action will emit a "turnOff" event: ``account``
+A successful action will emit a "turnOff" event: `account`
 example:
-```
+
+```json
 {
     "contract": "botcontroller",
     "event": "turnOff",
@@ -176,17 +189,19 @@ example:
 }
 ```
 
-### turnOn:
+#### turnOn
+
 Re-enables a disabled account. Note that basic service accounts on cooldown cannot be turned on again until after the cooldown period expires. Once cooldown expires, accounts will not be automatically re-enabled. This action must be used to re-enable such an account (see "special note for duration" in [Basic vs Premium Models](#basic-vs-premium-models) section above).
 
-* requires active key: yes
+- requires active key: yes
 
-* can be called by: previously registered Steem or Hive account
+- can be called by: previously registered Hive account
 
-* parameters: none, the calling account will be the one turned on
+- parameters: none, the calling account will be the one turned on
 
-* example:
-```
+- example:
+
+```json
 {
     "contractName": "botcontroller",
     "contractAction": "turnOn",
@@ -194,9 +209,10 @@ Re-enables a disabled account. Note that basic service accounts on cooldown cann
 }
 ```
 
-A successful action will emit a "turnOn" event: ``account``
+A successful action will emit a "turnOn" event: `account`
 example:
-```
+
+```json
 {
     "contract": "botcontroller",
     "event": "turnOn",
@@ -206,65 +222,71 @@ example:
 }
 ```
 
-## Market Management
+### Market Management
+
 These actions control how the market maker bot places orders on individual markets configured for your account. They differ from the above [Account Management](#account-management) actions in that they don't have an account-wide effect, but are rather targeted at specific markets.
 
 Note that none of these actions have an explicit account parameter, because they act only on configuration for the account that calls (triggers) the action. So the account is always implied.
-### addMarket:
+
+#### addMarket
+
 Instructs the market maker bot to begin placing orders on a new market for your account and, optionally, configure the trading parameters for the market. Accounts must have 200 ENG or BEE staked per market added. Basic service accounts are only allowed to add 1 market. Premium accounts can add unlimited markets.
 
 Examples of staking requirements:
-Markets | Requirement
----- | ----
-Basic service, 1 market | 200 ENG or BEE staked
-Premium service, 1 market | 1200 ENG or BEE staked (1000 base for premium + 200 for the market)
-Premium service, 4 markets | 1800 ENG or BEE staked (1000 base for premium + 4x200 for the markets)
+
+| Markets                    | Requirement                                                            |
+| -------------------------- | ---------------------------------------------------------------------- |
+| Basic service, 1 market    | 200 ENG or BEE staked                                                  |
+| Premium service, 1 market  | 1200 ENG or BEE staked (1000 base for premium + 200 for the market)    |
+| Premium service, 4 markets | 1800 ENG or BEE staked (1000 base for premium + 4x200 for the markets) |
 
 ENG or BEE that is in the process of being unstaked will **not** count toward the staking requirement. If the number of staked tokens falls below the total requirement for all markets, then all markets will be disabled until the staking requirement is once again met.
-* requires active key: yes
 
-* can be called by: previously registered Steem or Hive account
+- requires active key: yes
 
-* parameters:
-  * symbol (string): symbol of the token identifying the market to trade on (cannot be SWAP.HIVE or STEEMP)
-  * **(optional)** strategy (integer): the order strategy to use. Can be 1 or 2. Basic service top of the book strategy = 1, premium service wall nestling = 2. This setting can only be set by premium accounts (trying to set it with a basic service account will result in an error). If not provided, defaults to 1.
-  * **(optional)** maxBidPrice (string): the maximum price you’re willing to buy the token for, in SWAP.HIVE or STEEMP. The market maker bot will not place buy orders above this price.
-  * **(optional)** minSellPrice (string): the minimum price you’re willing to sell the token for, in SWAP.HIVE or STEEMP. The market maker bot will not place sell orders below this price.
-  * **(optional)** maxBaseToSpend (string): the maximum amount of SWAP.HIVE or STEEMP you’re willing to buy with in a single order. The market maker bot will not place buy orders for larger than this amount.
-  * **(optional)** minBaseToSpend (string): the smallest amount of SWAP.HIVE or STEEMP you’re willing to buy with in a single order. The market maker bot will not place buy orders for less than this amount.
-  * **(optional)** maxTokensToSell (string): the maximum amount of tokens you’re willing to sell in a single order. The market maker bot will not place sell orders for larger than this amount.
-  * **(optional)** minTokensToSell (string): the smallest amount of tokens you’re willing to sell in a single order. The market maker bot will not place sell orders for less than this amount.
-  * **(optional)** priceIncrement (string): the amount you want to increase/decrease the price by when placing new orders, in SWAP.HIVE or STEEMP. For example, if priceIncrement is 0.001 and the top-of-the-book buy price is 5.2, the bot will place a buy order for you at 5.201. Likewise if the top-of-the-book sell price is 5.5, the bot will place a sell order for you at 5.499.
-  * **(optional)** minSpread (string): the minimum spread you desire to maintain between top-of-the-book bid and ask prices, in SWAP.HIVE or STEEMP. If the current spread is less than this amount, the market maker bot will not place orders.
-  * **(optional)** maxDistFromNext (string): the maximum allowed price difference between top-of-the-book price and the next level of order depth. If the price "gap" between orders is larger than this amount, and your account currently has the top-of-the-book price, your order will be canceled and replaced lower down on the next tick. Otherwise, if your account *does not* have the top-of-the-book price, the top-of-the-book order will be ignored for the purpose of determining where to place new orders. For example, if priceIncrement is 0.001, maxDistFromNext is 0.01, top-of-the-book buy price is 5.2, and the next buy price lower down is 5.1, then the bot will place a buy order for you at 5.101.
-  * **(optional)** ignoreOrderQtyLt (string): ignore orders with token quantity less than or equal to this size, for the purpose of determining where to place new orders. For example, if ignoreOrderQtyLt is 10 and the first 3 orders on the order book all have quantity 8, but the 4th order down has quantity 12, then the 4th order will be considered top-of-the-book by the market maker. If using the wall nestling order strategy, will cause orders to be excluded from the order quantity summation.
-  * **(optional)** placeAtBidWall (string): wall size threshold that determines where buy orders will be placed when using the wall nestling order strategy. Has no effect if strategy does not equal 2 (see [wall nestling](#wall-nestling) for details).
-  * **(optional)** placeAtSellWall (string): wall size threshold that determines where sell orders will be placed when using the wall nestling order strategy. Has no effect if strategy does not equal 2 (see [wall nestling](#wall-nestling) for details).
+- can be called by: previously registered Hive account
+
+- parameters:
+  - symbol (string): symbol of the token identifying the market to trade on (cannot be SWAP.HIVE or STEEMP)
+  - **(optional)** strategy (integer): the order strategy to use. Can be 1 or 2. Basic service top of the book strategy = 1, premium service wall nestling = 2. This setting can only be set by premium accounts (trying to set it with a basic service account will result in an error). If not provided, defaults to 1.
+  - **(optional)** maxBidPrice (string): the maximum price you’re willing to buy the token for, in SWAP.HIVE or STEEMP. The market maker bot will not place buy orders above this price.
+  - **(optional)** minSellPrice (string): the minimum price you’re willing to sell the token for, in SWAP.HIVE or STEEMP. The market maker bot will not place sell orders below this price.
+  - **(optional)** maxBaseToSpend (string): the maximum amount of SWAP.HIVE or STEEMP you’re willing to buy with in a single order. The market maker bot will not place buy orders for larger than this amount.
+  - **(optional)** minBaseToSpend (string): the smallest amount of SWAP.HIVE or STEEMP you’re willing to buy with in a single order. The market maker bot will not place buy orders for less than this amount.
+  - **(optional)** maxTokensToSell (string): the maximum amount of tokens you’re willing to sell in a single order. The market maker bot will not place sell orders for larger than this amount.
+  - **(optional)** minTokensToSell (string): the smallest amount of tokens you’re willing to sell in a single order. The market maker bot will not place sell orders for less than this amount.
+  - **(optional)** priceIncrement (string): the amount you want to increase/decrease the price by when placing new orders, in SWAP.HIVE or STEEMP. For example, if priceIncrement is 0.001 and the top-of-the-book buy price is 5.2, the bot will place a buy order for you at 5.201. Likewise if the top-of-the-book sell price is 5.5, the bot will place a sell order for you at 5.499.
+  - **(optional)** minSpread (string): the minimum spread you desire to maintain between top-of-the-book bid and ask prices, in SWAP.HIVE or STEEMP. If the current spread is less than this amount, the market maker bot will not place orders.
+  - **(optional)** maxDistFromNext (string): the maximum allowed price difference between top-of-the-book price and the next level of order depth. If the price "gap" between orders is larger than this amount, and your account currently has the top-of-the-book price, your order will be canceled and replaced lower down on the next tick. Otherwise, if your account _does not_ have the top-of-the-book price, the top-of-the-book order will be ignored for the purpose of determining where to place new orders. For example, if priceIncrement is 0.001, maxDistFromNext is 0.01, top-of-the-book buy price is 5.2, and the next buy price lower down is 5.1, then the bot will place a buy order for you at 5.101.
+  - **(optional)** ignoreOrderQtyLt (string): ignore orders with token quantity less than or equal to this size, for the purpose of determining where to place new orders. For example, if ignoreOrderQtyLt is 10 and the first 3 orders on the order book all have quantity 8, but the 4th order down has quantity 12, then the 4th order will be considered top-of-the-book by the market maker. If using the wall nestling order strategy, will cause orders to be excluded from the order quantity summation.
+  - **(optional)** placeAtBidWall (string): wall size threshold that determines where buy orders will be placed when using the wall nestling order strategy. Has no effect if strategy does not equal 2 (see [wall nestling](#wall-nestling) for details).
+  - **(optional)** placeAtSellWall (string): wall size threshold that determines where sell orders will be placed when using the wall nestling order strategy. Has no effect if strategy does not equal 2 (see [wall nestling](#wall-nestling) for details).
 
   If any optional parameters are not specified, then sensible defaults will be set as follows:
 
-  Parameter | Default
-  ---- | ----
-  maxBidPrice | 1000
-  minSellPrice | 0.00000001
-  maxBaseToSpend | 100
-  minBaseToSpend | 1
-  maxTokensToSell | 100
-  minTokensToSell | 1
-  priceIncrement | 0.00001
-  minSpread | 0.00000001
-  maxDistFromNext | 0.0001
-  ignoreOrderQtyLt | 50
-  
-  Defaults for the wall nestling order strategy are:
-  
-  Parameter | Default
-  ---- | ----
-  placeAtBidWall | 10000
-  placeAtSellWall | 10000
+| Parameter        | Default    |
+| ---------------- | ---------- |
+| maxBidPrice      | 1000       |
+| minSellPrice     | 0.00000001 |
+| maxBaseToSpend   | 100        |
+| minBaseToSpend   | 1          |
+| maxTokensToSell  | 100        |
+| minTokensToSell  | 1          |
+| priceIncrement   | 0.00001    |
+| minSpread        | 0.00000001 |
+| maxDistFromNext  | 0.0001     |
+| ignoreOrderQtyLt | 50         |
 
-* examples:
-```
+Defaults for the wall nestling order strategy are:
+
+| Parameter       | Default |
+| --------------- | ------- |
+| placeAtBidWall  | 10000   |
+| placeAtSellWall | 10000   |
+
+- examples:
+
+```js
 // add a market with default configuration
 {
     "contractName": "botcontroller",
@@ -286,9 +308,10 @@ ENG or BEE that is in the process of being unstaked will **not** count toward th
 }
 ```
 
-A successful action will emit an "addMarket" event: ``account, symbol``
+A successful action will emit an "addMarket" event: `account, symbol`
 example:
-```
+
+```json
 {
     "contract": "botcontroller",
     "event": "addMarket",
@@ -301,30 +324,33 @@ example:
 
 If any default trading configuration is overridden, there will also be an "updateMarket" event emitted as per below.
 
-### updateMarket:
+#### updateMarket
+
 Updates the configuration for a previously added market. If your account is not premium, a 1 ENG or BEE service fee is required. Premium users can make unlimited updates for free.
-* requires active key: yes
 
-* can be called by: previously registered Steem or Hive account
+- requires active key: yes
 
-* parameters:
-  * symbol (string): symbol of the token identifying the market to trade on (cannot be SWAP.HIVE or STEEMP)
-  * **(optional)** strategy (integer): the order strategy to use. Can be 1 or 2. Basic service top of the book strategy = 1, premium service wall nestling = 2. This setting can only be updated by premium accounts (trying to update it with a basic service account will result in an error).
-  * **(optional)** maxBidPrice (string): the maximum price you’re willing to buy the token for, in SWAP.HIVE or STEEMP. The market maker bot will not place buy orders above this price.
-  * **(optional)** minSellPrice (string): the minimum price you’re willing to sell the token for, in SWAP.HIVE or STEEMP. The market maker bot will not place sell orders below this price.
-  * **(optional)** maxBaseToSpend (string): the maximum amount of SWAP.HIVE or STEEMP you’re willing to buy with in a single order. The market maker bot will not place buy orders for larger than this amount.
-  * **(optional)** minBaseToSpend (string): the smallest amount of SWAP.HIVE or STEEMP you’re willing to buy with in a single order. The market maker bot will not place buy orders for less than this amount.
-  * **(optional)** maxTokensToSell (string): the maximum amount of tokens you’re willing to sell in a single order. The market maker bot will not place sell orders for larger than this amount.
-  * **(optional)** minTokensToSell (string): the smallest amount of tokens you’re willing to sell in a single order. The market maker bot will not place sell orders for less than this amount.
-  * **(optional)** priceIncrement (string): the amount you want to increase/decrease the price by when placing new orders, in SWAP.HIVE or STEEMP. For example, if priceIncrement is 0.001 and the top-of-the-book buy price is 5.2, the bot will place a buy order for you at 5.201. Likewise if the top-of-the-book sell price is 5.5, the bot will place a sell order for you at 5.499.
-  * **(optional)** minSpread (string): the minimum spread you desire to maintain between top-of-the-book bid and ask prices, in SWAP.HIVE or STEEMP. If the current spread is less than this amount, the market maker bot will not place orders.
-  * **(optional)** maxDistFromNext (string): the maximum allowed price difference between top-of-the-book price and the next level of order depth. If the price "gap" between orders is larger than this amount, and your account currently has the top-of-the-book price, your order will be canceled and replaced lower down on the next tick. Otherwise, if your account *does not* have the top-of-the-book price, the top-of-the-book order will be ignored for the purpose of determining where to place new orders. For example, if priceIncrement is 0.001, maxDistFromNext is 0.01, top-of-the-book buy price is 5.2, and the next buy price lower down is 5.1, then the bot will place a buy order for you at 5.101.
-  * **(optional)** ignoreOrderQtyLt (string): ignore orders with token quantity less than or equal to this size, for the purpose of determining where to place new orders. For example, if ignoreOrderQtyLt is 10 and the first 3 orders on the order book all have quantity 8, but the 4th order down has quantity 12, then the 4th order will be considered top-of-the-book by the market maker. If using the wall nestling order strategy, will cause orders to be excluded from the order quantity summation.
-  * **(optional)** placeAtBidWall (string): wall size threshold that determines where buy orders will be placed when using the wall nestling order strategy. Has no effect if strategy does not equal 2 (see [wall nestling](#wall-nestling) for details).
-  * **(optional)** placeAtSellWall (string): wall size threshold that determines where sell orders will be placed when using the wall nestling order strategy. Has no effect if strategy does not equal 2 (see [wall nestling](#wall-nestling) for details).
+- can be called by: previously registered Hive account
 
-* examples:
-```
+- parameters:
+  - symbol (string): symbol of the token identifying the market to trade on (cannot be SWAP.HIVE or STEEMP)
+  - **(optional)** strategy (integer): the order strategy to use. Can be 1 or 2. Basic service top of the book strategy = 1, premium service wall nestling = 2. This setting can only be updated by premium accounts (trying to update it with a basic service account will result in an error).
+  - **(optional)** maxBidPrice (string): the maximum price you’re willing to buy the token for, in SWAP.HIVE or STEEMP. The market maker bot will not place buy orders above this price.
+  - **(optional)** minSellPrice (string): the minimum price you’re willing to sell the token for, in SWAP.HIVE or STEEMP. The market maker bot will not place sell orders below this price.
+  - **(optional)** maxBaseToSpend (string): the maximum amount of SWAP.HIVE or STEEMP you’re willing to buy with in a single order. The market maker bot will not place buy orders for larger than this amount.
+  - **(optional)** minBaseToSpend (string): the smallest amount of SWAP.HIVE or STEEMP you’re willing to buy with in a single order. The market maker bot will not place buy orders for less than this amount.
+  - **(optional)** maxTokensToSell (string): the maximum amount of tokens you’re willing to sell in a single order. The market maker bot will not place sell orders for larger than this amount.
+  - **(optional)** minTokensToSell (string): the smallest amount of tokens you’re willing to sell in a single order. The market maker bot will not place sell orders for less than this amount.
+  - **(optional)** priceIncrement (string): the amount you want to increase/decrease the price by when placing new orders, in SWAP.HIVE or STEEMP. For example, if priceIncrement is 0.001 and the top-of-the-book buy price is 5.2, the bot will place a buy order for you at 5.201. Likewise if the top-of-the-book sell price is 5.5, the bot will place a sell order for you at 5.499.
+  - **(optional)** minSpread (string): the minimum spread you desire to maintain between top-of-the-book bid and ask prices, in SWAP.HIVE or STEEMP. If the current spread is less than this amount, the market maker bot will not place orders.
+  - **(optional)** maxDistFromNext (string): the maximum allowed price difference between top-of-the-book price and the next level of order depth. If the price "gap" between orders is larger than this amount, and your account currently has the top-of-the-book price, your order will be canceled and replaced lower down on the next tick. Otherwise, if your account _does not_ have the top-of-the-book price, the top-of-the-book order will be ignored for the purpose of determining where to place new orders. For example, if priceIncrement is 0.001, maxDistFromNext is 0.01, top-of-the-book buy price is 5.2, and the next buy price lower down is 5.1, then the bot will place a buy order for you at 5.101.
+  - **(optional)** ignoreOrderQtyLt (string): ignore orders with token quantity less than or equal to this size, for the purpose of determining where to place new orders. For example, if ignoreOrderQtyLt is 10 and the first 3 orders on the order book all have quantity 8, but the 4th order down has quantity 12, then the 4th order will be considered top-of-the-book by the market maker. If using the wall nestling order strategy, will cause orders to be excluded from the order quantity summation.
+  - **(optional)** placeAtBidWall (string): wall size threshold that determines where buy orders will be placed when using the wall nestling order strategy. Has no effect if strategy does not equal 2 (see [wall nestling](#wall-nestling) for details).
+  - **(optional)** placeAtSellWall (string): wall size threshold that determines where sell orders will be placed when using the wall nestling order strategy. Has no effect if strategy does not equal 2 (see [wall nestling](#wall-nestling) for details).
+
+- examples:
+
+```js
 {
     "contractName": "botcontroller",
     "contractAction": "updateMarket",
@@ -366,9 +392,10 @@ Updates the configuration for a previously added market. If your account is not 
 }
 ```
 
-A successful action will emit an "updateMarket" event: ``account, symbol, old field value #1, new field value #1, old field value #2, new field value #2, ...``
+A successful action will emit an "updateMarket" event: `account, symbol, old field value #1, new field value #1, old field value #2, new field value #2, ...`
 example:
-```
+
+```json
 {
     "contract": "botcontroller",
     "event": "updateMarket",
@@ -383,17 +410,20 @@ example:
 }
 ```
 
-### removeMarket:
+#### removeMarket
+
 Completely removes all configuration for a market. The market maker bot will no longer place new orders on this market until you add it back using the [addMarket action](#addmarket). However any existing orders will stay in place and need to be managed manually by the user. Removing markets can be useful if your account loses premium status and you need to delete extra markets. In other circumstances, when you need to only temporarily stop the bot (for example in periods of extreme market volatility), it may be better to use the [disableMarket action](#disablemarket) instead.
-* requires active key: yes
 
-* can be called by: previously registered Steem or Hive account
+- requires active key: yes
 
-* parameters:
-  * symbol (string): symbol of the token identifying the market configuration to delete (cannot be SWAP.HIVE or STEEMP)
+- can be called by: previously registered Hive account
 
-* example:
-```
+- parameters:
+  - symbol (string): symbol of the token identifying the market configuration to delete (cannot be SWAP.HIVE or STEEMP)
+
+- example:
+
+```json
 {
     "contractName": "botcontroller",
     "contractAction": "removeMarket",
@@ -403,9 +433,10 @@ Completely removes all configuration for a market. The market maker bot will no 
 }
 ```
 
-A successful action will emit a "removeMarket" event: ``account, symbol``
+A successful action will emit a "removeMarket" event: `account, symbol`
 example:
-```
+
+```json
 {
     "contract": "botcontroller",
     "event": "removeMarket",
@@ -416,17 +447,20 @@ example:
 }
 ```
 
-### disableMarket:
+#### disableMarket
+
 Disables a market without removing its configuration. The market maker bot will no longer place new orders on this market until you re-enable it via the [enableMarket action](#enablemarket). However any existing orders will stay in place and need to be managed manually by the user. Note that disabled markets still count towards your maximum allowed number of markets (basic service accounts can have 1 market configured; premium service accounts can have unlimited markets).
-* requires active key: yes
 
-* can be called by: previously registered Steem or Hive account
+- requires active key: yes
 
-* parameters:
-  * symbol (string): symbol of the token identifying the market configuration to disable (cannot be SWAP.HIVE or STEEMP)
+- can be called by: previously registered Hive account
 
-* example:
-```
+- parameters:
+  - symbol (string): symbol of the token identifying the market configuration to disable (cannot be SWAP.HIVE or STEEMP)
+
+- example:
+
+```json
 {
     "contractName": "botcontroller",
     "contractAction": "disableMarket",
@@ -436,9 +470,10 @@ Disables a market without removing its configuration. The market maker bot will 
 }
 ```
 
-A successful action will emit a "disableMarket" event: ``account, symbol``
+A successful action will emit a "disableMarket" event: `account, symbol`
 example:
-```
+
+```json
 {
     "contract": "botcontroller",
     "event": "disableMarket",
@@ -449,7 +484,8 @@ example:
 }
 ```
 
-### enableMarket:
+#### enableMarket
+
 Re-enables a previously disabled market, so that the market maker bot will begin placing orders for it again. To enable a market, the following 2 requirements must be met:
 
 1. The number of markets configured for your account must not be greater than the maximum allowed (basic service accounts can have 1 market configured; premium service accounts can have unlimited markets).
@@ -457,15 +493,16 @@ Re-enables a previously disabled market, so that the market maker bot will begin
 
 For more info on staking requirements, refer to the [addMarket action section](#addmarket).
 
-* requires active key: yes
+- requires active key: yes
 
-* can be called by: previously registered Steem or Hive account
+- can be called by: previously registered Hive account
 
-* parameters:
-  * symbol (string): symbol of the token identifying the market configuration to enable (cannot be SWAP.HIVE or STEEMP)
+- parameters:
+  - symbol (string): symbol of the token identifying the market configuration to enable (cannot be SWAP.HIVE or STEEMP)
 
-* example:
-```
+- example:
+
+```json
 {
     "contractName": "botcontroller",
     "contractAction": "enableMarket",
@@ -475,9 +512,10 @@ For more info on staking requirements, refer to the [addMarket action section](#
 }
 ```
 
-A successful action will emit an "enableMarket" event: ``account, symbol``
+A successful action will emit an "enableMarket" event: `account, symbol`
 example:
-```
+
+```json
 {
     "contract": "botcontroller",
     "event": "enableMarket",
@@ -488,64 +526,72 @@ example:
 }
 ```
 
-# Tables available:
+## Tables available
+
 Note: all tables below have an implicit _id field that provides a unique numeric identifier for each particular object in the database. Most of the time the _id field is not important, so we have omitted it from table descriptions.
-## params:
+
+### params
+
 contains contract parameters such as the current fees
-* fields
-  * basicFee = the cost in ENG or BEE to register an account
-  * basicSettingsFee = the cost in ENG or BEE to update market configuration
-  * premiumFee = the cost in ENG or BEE to upgrade a basic service account to premium
-  * premiumBaseStake = the amount of ENG or BEE that must be staked to maintain premium service
-  * stakePerMarket = the amount of ENG or BEE that must be staked for each market an account has configured
-  * basicDurationBlocks = the number of Hive/Steem blocks that a basic service account is allowed to remain active before going into cooldown mode
-  * basicCooldownBlocks = the number of Hive/Steem blocks that an account in cooldown must wait before being able to turn itself back on
-  * basicMinTickIntervalBlocks = the tick interval for a basic service account, measured in Hive/Steem blocks (accounts are not guaranteed to tick at exactly this rate)
-  * premiumMinTickIntervalBlocks = the tick interval for a premium service account, measured in Hive/Steem blocks (accounts are not guaranteed to tick at exactly this rate)
-  * basicMaxTicksPerBlock = the maximum number of basic service accounts that are allowed by the system to tick in each block
-  * premiumMaxTicksPerBlock = the maximum number of premium service accounts that are allowed by the system to tick in each block
+
+- fields
+  - basicFee = the cost in ENG or BEE to register an account
+  - basicSettingsFee = the cost in ENG or BEE to update market configuration
+  - premiumFee = the cost in ENG or BEE to upgrade a basic service account to premium
+  - premiumBaseStake = the amount of ENG or BEE that must be staked to maintain premium service
+  - stakePerMarket = the amount of ENG or BEE that must be staked for each market an account has configured
+  - basicDurationBlocks = the number of Hive blocks that a basic service account is allowed to remain active before going into cooldown mode
+  - basicCooldownBlocks = the number of Hive blocks that an account in cooldown must wait before being able to turn itself back on
+  - basicMinTickIntervalBlocks = the tick interval for a basic service account, measured in Hive blocks (accounts are not guaranteed to tick at exactly this rate)
+  - premiumMinTickIntervalBlocks = the tick interval for a premium service account, measured in Hive blocks (accounts are not guaranteed to tick at exactly this rate)
+  - basicMaxTicksPerBlock = the maximum number of basic service accounts that are allowed by the system to tick in each block
+  - premiumMaxTicksPerBlock = the maximum number of premium service accounts that are allowed by the system to tick in each block
 
 Note about time conversions: for basicDurationBlocks, basicCooldownBlocks, basicMinTickIntervalBlocks, and premiumMinTickIntervalBlocks, blocks are assumed to have an exactly 3 second block time. Thus to convert to a time interval in seconds, multiply these amounts by 3.
 
-## users
+### users
+
 contains top level configuration for each account registered with the market maker system
-* fields
-  * account = Steem or Hive account name
-  * isPremium = is the account upgraded to premium service?
-  * isPremiumFeePaid = has the upgrade fee for premium service been paid?
-  * isOnCooldown = is the account currently on cooldown?
-  * isEnabled = is the account currently turned on for market maker activity?
-  * markets = the number of markets configured for this account
-  * enabledMarkets = the number of configured markets that are currently enabled for this account
-  * timeLimit = for basic service accounts, indicates the number of milliseconds remaining before the account will go into cooldown
-  * lastTickTimestamp = date & time when the account was last ticked (i.e. at which the market maker bot updated order status for current market conditions), in Unix epoch milliseconds
-  * lastTickBlock = the last sidechain block at which the account was ticked (i.e. at which the market maker bot updated order status for current market conditions)
-  * creationTimestamp = date & time the account was registered, in Unix epoch milliseconds
-  * creationBlock = the sidechain block at which the account was registered
+
+- fields
+  - account = Hive account name
+  - isPremium = is the account upgraded to premium service?
+  - isPremiumFeePaid = has the upgrade fee for premium service been paid?
+  - isOnCooldown = is the account currently on cooldown?
+  - isEnabled = is the account currently turned on for market maker activity?
+  - markets = the number of markets configured for this account
+  - enabledMarkets = the number of configured markets that are currently enabled for this account
+  - timeLimit = for basic service accounts, indicates the number of milliseconds remaining before the account will go into cooldown
+  - lastTickTimestamp = date & time when the account was last ticked (i.e. at which the market maker bot updated order status for current market conditions), in Unix epoch milliseconds
+  - lastTickBlock = the last sidechain block at which the account was ticked (i.e. at which the market maker bot updated order status for current market conditions)
+  - creationTimestamp = date & time the account was registered, in Unix epoch milliseconds
+  - creationBlock = the sidechain block at which the account was registered
 
 There are database indexes on the account and lastTickBlock fields. The account field can be used as a unique primary key.
 
-## markets
+### markets
+
 contains configuration for each market an account is configured for market making on
-* fields
-  * account = Steem or Hive account name
-  * symbol = symbol of the token identifying the market to trade on
-  * precision = precision of this market's token (how many decimal places are allowed for fractional amounts)
-  * strategy = indicates the trading strategy the market maker should follow for this market. Can be 1 (for placing orders on top of the book) or 2 (for wall nestling).
-  * maxBidPrice = the maximum price you’re willing to buy the token for, in SWAP.HIVE or STEEMP. The market maker bot will not place buy orders above this price.
-  * minSellPrice = the minimum price you’re willing to sell the token for, in SWAP.HIVE or STEEMP. The market maker bot will not place sell orders below this price.
-  * maxBaseToSpend = the maximum amount of SWAP.HIVE or STEEMP you’re willing to buy with in a single order. The market maker bot will not place buy orders for larger than this amount.
-  * minBaseToSpend = the smallest amount of SWAP.HIVE or STEEMP you’re willing to buy with in a single order. The market maker bot will not place buy orders for less than this amount.
-  * maxTokensToSell = the maximum amount of tokens you’re willing to sell in a single order. The market maker bot will not place sell orders for larger than this amount.
-  * minTokensToSell = the smallest amount of tokens you’re willing to sell in a single order. The market maker bot will not place sell orders for less than this amount.
-  * priceIncrement = the amount you want to increase/decrease the price by when placing new orders, in SWAP.HIVE or STEEMP. For example, if priceIncrement is 0.001 and the top-of-the-book buy price is 5.2, the bot will place a buy order for you at 5.201. Likewise if the top-of-the-book sell price is 5.5, the bot will place a sell order for you at 5.499.
-  * minSpread = the minimum spread you desire to maintain between top-of-the-book bid and ask prices, in SWAP.HIVE or STEEMP. If the current spread is less than this amount, the market maker bot will not place orders.
-  * maxDistFromNext = the maximum allowed price difference between top-of-the-book price and the next level of order depth.
-  * ignoreOrderQtyLt = ignore orders with token quantity less than or equal to this size, for the purpose of determining where to place new orders.
-  * placeAtBidWall = wall size threshold that determines where buy orders will be placed when using the wall nestling order strategy.
-  * placeAtSellWall = wall size threshold that determines where sell orders will be placed when using the wall nestling order strategy.
-  * isEnabled = is the market currently enabled for market maker activity?
-  * creationTimestamp = date & time the account was registered, in Unix epoch milliseconds
-  * creationBlock = the sidechain block at which the account was registered
+
+- fields
+  - account = Hive account name
+  - symbol = symbol of the token identifying the market to trade on
+  - precision = precision of this market's token (how many decimal places are allowed for fractional amounts)
+  - strategy = indicates the trading strategy the market maker should follow for this market. Can be 1 (for placing orders on top of the book) or 2 (for wall nestling).
+  - maxBidPrice = the maximum price you’re willing to buy the token for, in SWAP.HIVE or STEEMP. The market maker bot will not place buy orders above this price.
+  - minSellPrice = the minimum price you’re willing to sell the token for, in SWAP.HIVE or STEEMP. The market maker bot will not place sell orders below this price.
+  - maxBaseToSpend = the maximum amount of SWAP.HIVE or STEEMP you’re willing to buy with in a single order. The market maker bot will not place buy orders for larger than this amount.
+  - minBaseToSpend = the smallest amount of SWAP.HIVE or STEEMP you’re willing to buy with in a single order. The market maker bot will not place buy orders for less than this amount.
+  - maxTokensToSell = the maximum amount of tokens you’re willing to sell in a single order. The market maker bot will not place sell orders for larger than this amount.
+  - minTokensToSell = the smallest amount of tokens you’re willing to sell in a single order. The market maker bot will not place sell orders for less than this amount.
+  - priceIncrement = the amount you want to increase/decrease the price by when placing new orders, in SWAP.HIVE or STEEMP. For example, if priceIncrement is 0.001 and the top-of-the-book buy price is 5.2, the bot will place a buy order for you at 5.201. Likewise if the top-of-the-book sell price is 5.5, the bot will place a sell order for you at 5.499.
+  - minSpread = the minimum spread you desire to maintain between top-of-the-book bid and ask prices, in SWAP.HIVE or STEEMP. If the current spread is less than this amount, the market maker bot will not place orders.
+  - maxDistFromNext = the maximum allowed price difference between top-of-the-book price and the next level of order depth.
+  - ignoreOrderQtyLt = ignore orders with token quantity less than or equal to this size, for the purpose of determining where to place new orders.
+  - placeAtBidWall = wall size threshold that determines where buy orders will be placed when using the wall nestling order strategy.
+  - placeAtSellWall = wall size threshold that determines where sell orders will be placed when using the wall nestling order strategy.
+  - isEnabled = is the market currently enabled for market maker activity?
+  - creationTimestamp = date & time the account was registered, in Unix epoch milliseconds
+  - creationBlock = the sidechain block at which the account was registered
 
 There are database indexes on the account and symbol fields. The combination of account and symbol fields can be used as a unique primary key.

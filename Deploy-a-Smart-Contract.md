@@ -1,4 +1,4 @@
-To deploy a Smart Contract, you'll either need to make a Steem post, post a custom_json operation or transfer funds with a memo on Steem (this will depend on how big the code of your contract is), for all the different solutions you'll need to send a JSON like this:
+To deploy a smart contract, broadcast a Hive `custom_json` operation to the sidechain id, usually `ssc-mainnet-hive` on Hive Engine mainnet. The custom JSON payload calls the system `contract` contract's `deploy` action:
 
 ```js
 {
@@ -11,10 +11,12 @@ To deploy a Smart Contract, you'll either need to make a Steem post, post a cust
 }
 ```
 
- - name: this is the name of the Smart Contract you want to deploy, it has to be unique on the sidechain
- - code: this is the code of your Smart Contract, it is basically your Javascript code encoded on Base64 (you can easily encode your code via this tool: https://www.base64encode.org/)
+- name: this is the name of the Smart Contract you want to deploy, it has to be unique on the sidechain
+- code: this is the JavaScript source of your smart contract encoded as Base64
 
-Example of the deployment of a Smart Contract
+Deployment must be signed by the Hive account that will own the contract. Large contracts may require chunking or helper tooling because Hive custom JSON operations have size limits.
+
+Example deployment payload:
 
 ```js
 {
