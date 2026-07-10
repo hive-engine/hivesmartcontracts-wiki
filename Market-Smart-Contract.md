@@ -1,18 +1,20 @@
-
 # Market contract
 
-## Actions available:
-### buy: 
-Buys tokens with STEEMP.
-The STEEMP that you are trying to exchange are locked into the smart contract. 
+## Actions available
 
- - parameters:
-	- symbol (string): symbol of the token you want to buy
-	- quantity (string): quantity of tokens to buy
-	- price (string): maximum number of STEEMP/token you are willing to pay
+### buy
+
+Buys tokens with STEEMP.
+The STEEMP that you are trying to exchange are locked into the smart contract.
+
+- parameters:
+  - symbol (string): symbol of the token you want to buy
+  - quantity (string): quantity of tokens to buy
+  - price (string): maximum number of STEEMP/token you are willing to pay
 
 - example:
-```
+
+```json
 {
     "contractName": "market",
     "contractAction": "buy",
@@ -23,18 +25,20 @@ The STEEMP that you are trying to exchange are locked into the smart contract.
     }
 }
 ```
-	
-### sell: 
-Sells tokens for STEEMP.
-The tokens that you are trying to exchange are locked into the smart contract. 
 
- - parameters:
-	- symbol (string): symbol of the token you want to sell
-	- quantity (string): quantity of tokens to sell
-	- price (string): minimum number of STEEMP/token you are willing to sell
+### sell
+
+Sells tokens for STEEMP.
+The tokens that you are trying to exchange are locked into the smart contract.
+
+- parameters:
+  - symbol (string): symbol of the token you want to sell
+  - quantity (string): quantity of tokens to sell
+  - price (string): minimum number of STEEMP/token you are willing to sell
 
 - example:
-```
+
+```json
 {
     "contractName": "market",
     "contractAction": "sell",
@@ -46,15 +50,17 @@ The tokens that you are trying to exchange are locked into the smart contract.
 }
 ```
 
-### marketBuy: 
-Executes a market buy with STEEMP or SWAP.HIVE. This action will try to buy as many tokens as it can with the amount you specify, regardless of market price. As such, multiple sell orders could be filled by this action, and you may experience price slippage if the order book is thin. 
+### marketBuy
 
- - parameters:
-	- symbol (string): symbol of the token you want to buy
-	- quantity (string): quantity of STEEMP or SWAP.HIVE to spend
+Executes a market buy with STEEMP or SWAP.HIVE. This action will try to buy as many tokens as it can with the amount you specify, regardless of market price. As such, multiple sell orders could be filled by this action, and you may experience price slippage if the order book is thin.
+
+- parameters:
+  - symbol (string): symbol of the token you want to buy
+  - quantity (string): quantity of STEEMP or SWAP.HIVE to spend
 
 - example:
-```
+
+```js
 {
     "contractName": "market",
     "contractAction": "marketBuy",
@@ -65,15 +71,17 @@ Executes a market buy with STEEMP or SWAP.HIVE. This action will try to buy as m
 }
 ```
 
-### marketSell: 
-Executes a market sell for STEEMP or SWAP.HIVE. This action will try to sell as many tokens as the quantity you specify, regardless of market price. As such, multiple buy orders could be filled by this action, and you may experience price slippage if the order book is thin. 
+### marketSell
 
- - parameters:
-	- symbol (string): symbol of the token you want to sell
-	- quantity (string): quantity of tokens to sell
+Executes a market sell for STEEMP or SWAP.HIVE. This action will try to sell as many tokens as the quantity you specify, regardless of market price. As such, multiple buy orders could be filled by this action, and you may experience price slippage if the order book is thin.
+
+- parameters:
+  - symbol (string): symbol of the token you want to sell
+  - quantity (string): quantity of tokens to sell
 
 - example:
-```
+
+```js
 {
     "contractName": "market",
     "contractAction": "marketSell",
@@ -84,16 +92,18 @@ Executes a market sell for STEEMP or SWAP.HIVE. This action will try to sell as 
 }
 ```
 
-### cancel: 
+### cancel
+
 Cancels an order.
 Will unlock any tokens that haven't been bought/sold.
 
- - parameters:
-	- type (string: "buy"|"sell"): type of order
-	- id (string): Steem transaction ID that initiated the order
+- parameters:
+  - type (string: "buy"|"sell"): type of order
+  - id (string): Hive transaction ID that initiated the order
 
 - example:
-```
+
+```json
 {
     "contractName": "market",
     "contractAction": "cancel",
@@ -104,79 +114,85 @@ Will unlock any tokens that haven't been bought/sold.
 }
 ```
 
-## Tables available:
+## Tables available
 
-### buyBook:
+### buyBook
+
 list of all the pending buy orders
 
--	fields:
-	-	txId = transactionId
+- fields:
+  - txId = transactionId
 
-	- account = account owning the order
+  - account = account owning the order
 
-	- symbol = symbol of the token to exchange
+  - symbol = symbol of the token to exchange
 
-	- quantity = quantity of tokens to buy
+  - quantity = quantity of tokens to buy
 
-	- price = price (STEEMP/token)
+  - price = price (STEEMP/token)
 
-	- tokensLocked = number of remaining STEEMP that are locked into the smart contract
+  - tokensLocked = number of remaining STEEMP that are locked into the smart contract
 
 - indexes available: symbol, account, priceDec (index on price), expiration, txId
 
-### sellBook:
+### sellBook
+
 list of all the pending sell orders
 
--	fields:
-	-	txId = transactionId
+- fields:
+  - txId = transactionId
 
-	- account = account owning the order
+  - account = account owning the order
 
-	- symbol = symbol of the token to exchange
+  - symbol = symbol of the token to exchange
 
-	- quantity = remaining quantity of tokens to sell
+  - quantity = remaining quantity of tokens to sell
 
-	- price = price (STEEMP/token)
+  - price = price (STEEMP/token)
 
 - indexes available: symbol, account, priceDec (index on price), expiration, txId
 
-### tradesHistory:
+### tradesHistory
+
 list of all the trades (max 24hrs of history)
--	fields:
-	- type = 'buy' or 'sell'
-	
-	- buyer = account that is buying the tokens
-	
-	- seller = account that is selling the tokens
 
-	- symbol = symbol of the token traded
+- fields:
+  - type = 'buy' or 'sell'
 
-	- quantity = quantity of tokens traded
+  - buyer = account that is buying the tokens
 
-	- price = price (STEEMP or SWAP.HIVE per token)
+  - seller = account that is selling the tokens
 
-	- timestamp = unix timestamp of the trade (this timestamp is based on the timestamp of the reference Steem block)
-	
-	- volume = amount of STEEMP or SWAP.HIVE transacted
-	
-	- buyTxId = order transaction ID of the order hit on the buy side
-	
-	- sellTxId = order transaction ID of the order hit on the sell side
+  - symbol = symbol of the token traded
+
+  - quantity = quantity of tokens traded
+
+  - price = price (STEEMP or SWAP.HIVE per token)
+
+  - timestamp = unix timestamp of the trade (this timestamp is based on the timestamp of the reference Hive block)
+
+  - volume = amount of STEEMP or SWAP.HIVE transacted
+
+  - buyTxId = order transaction ID of the order hit on the buy side
+
+  - sellTxId = order transaction ID of the order hit on the sell side
 
 - indexes available: symbol
 
-### metrics:
+### metrics
+
 list of the metrics per token
--	fields:
-	- "symbol": symbol of the token
-    - "volume": 24h volume traded
-    - "volumeExpiration": unix timestamp when the volume is not relevant anymore (when no trades during the last 24h for example)
-    - "lastPrice": last price for which the token was traded
-    - "lowestAsk": lowest price from the sell order book
-    - "highestBid": highest price from the buy order book
-    - "lastDayPrice": price of the token 24h ago
-    -  "lastDayPriceExpiration": unix timestamp when lastDayPrice is not relevant anymore (when no trades during the last 24h for example)
-    - "priceChangeSteem": 24h price change in Steem
-    - "priceChangePercent": 24h price change in %
+
+- fields:
+  - "symbol": symbol of the token
+  - "volume": 24h volume traded
+  - "volumeExpiration": unix timestamp when the volume is not relevant anymore (when no trades during the last 24h for example)
+  - "lastPrice": last price for which the token was traded
+  - "lowestAsk": lowest price from the sell order book
+  - "highestBid": highest price from the buy order book
+  - "lastDayPrice": price of the token 24h ago
+  - "lastDayPriceExpiration": unix timestamp when lastDayPrice is not relevant anymore (when no trades during the last 24h for example)
+  - "priceChangeHive": 24h price change in SWAP.HIVE
+  - "priceChangePercent": 24h price change in %
 
 - indexes available: symbol

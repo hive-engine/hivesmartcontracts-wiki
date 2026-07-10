@@ -1,21 +1,21 @@
-# Steem Smart Contracts
+# Hive Smart Contracts
 
- ## 1.  What is it?
+## 1. What is it?
 
-Steem Smart Contracts is a sidechain powered by Steem. It allows you to perform actions on a decentralized database via the power of Smart Contracts.
+Hive Smart Contracts is a sidechain powered by Hive. It allows users and contracts to perform actions on a decentralized database through JavaScript smart contracts.
 
- ## 2.  How does it work?
+## 2. How does it work?
 
-This is actually pretty easy. You just need a Steem account and that's it. To interact with the Smart Contracts, you simply post a message on the Steem blockchain (formatted in a specific way) and the message will then be caught by the sidechain and processed.
+You need a Hive account. To interact with the sidechain, broadcast a Hive `custom_json` operation using the sidechain id, contract name, contract action, and payload format expected by the target contract. The Hive Smart Contracts node streams Hive blocks, extracts those transactions, executes the requested contract actions, and stores the resulting sidechain blocks and contract tables in MongoDB.
 
- ## 3.  Sidechain specifications
+## 3. Sidechain specifications
+
 - run on [node.js](https://nodejs.org)
-- database layer powered by [LokiJS](https://github.com/techfort/LokiJS)
+- database layer powered by [MongoDB](https://www.mongodb.com/)
 - Smart Contracts developed in Javascript
-- Smart Contracts run in a sandboxed Javascript Virtual Machine called [VM2](https://github.com/patriksimek/vm2)
-- a block on the sidechain is produced only if transactions are being parsed in a Steem block
+- Smart Contracts run in a sandboxed JavaScript virtual machine using `isolated-vm`
+- a block on the sidechain is produced only when transactions are parsed in a Hive block
 
- ## 4.  Roadmap
- This project is in its early stage, therefore, I consider it more as a Proof Of Concept for now as important features are still missing:
- - implement the P2P layer
- - implement the Consensus layer (PoS? DPoS? other?)
+## 4. Current node implementation
+
+The current reference implementation is the `hive-engine/hivesmartcontracts` node. It includes JSON-RPC APIs, MongoDB-backed chain and contract storage, witness support, P2P networking, light-node mode, replay/restore tooling, and the deployed Hive Engine contract set.

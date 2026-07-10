@@ -1,21 +1,21 @@
-
-
 # Tokens contract
 
-## Actions available:
+## Actions available
 
 ## Staking
-### enableStaking: 
+
+### enableStaking
+
 Enables the staking feature for a token.
 
 - requires active key: yes
- - parameters:
-	- symbol (string): symbol of the token you want to enable the staking feature
-	- unstakingCooldown (integer): number of days that a user will have to wait until the tokens are added to their balance (between 1 and 365 days)
-	- numberTransactions (integer): number of transactions that an unstake will be divided in (between 1 and 365 days)
-
+- parameters:
+  - symbol (string): symbol of the token you want to enable the staking feature
+  - unstakingCooldown (integer): number of days that a user will have to wait until the tokens are added to their balance (between 1 and 365 days)
+  - numberTransactions (integer): number of transactions that an unstake will be divided in (between 1 and 365 days)
 - examples:
-```
+
+```js
 {
     "contractName": "tokens",
     "contractAction": "enableStaking",
@@ -46,17 +46,19 @@ Enables the staking feature for a token.
     }
 }
 ```
-### stake: 
-Stakes tokens. (if it is a token that allows staking) 
+
+### stake
+
+Stakes tokens. (if it is a token that allows staking)
 
 - requires active key: yes
- - parameters:
-	- to (string): account that will receive the stake 
-	- symbol (string): symbol of the token you want to stake
-	- quantity (string): quantity of tokens to stake
-
+- parameters:
+  - to (string): account that will receive the stake
+  - symbol (string): symbol of the token you want to stake
+  - quantity (string): quantity of tokens to stake
 - example:
-```
+
+```json
 {
     "contractName": "tokens",
     "contractAction": "stake",
@@ -67,17 +69,19 @@ Stakes tokens. (if it is a token that allows staking)
     }
 }
 ```
-### unstake: 
+
+### unstake
+
 Unstakes tokens. (if it is a token that allows staking)
 There is a cooldown period that is setup per token (see "enableStaking" action)
 
 - requires active key: yes
- - parameters:
-	- symbol (string): symbol of the token you want to unstake
-	- quantity (string): quantity of tokens to unstake
-
+- parameters:
+  - symbol (string): symbol of the token you want to unstake
+  - quantity (string): quantity of tokens to unstake
 - example:
-```
+
+```json
 {
     "contractName": "tokens",
     "contractAction": "unstake",
@@ -88,15 +92,16 @@ There is a cooldown period that is setup per token (see "enableStaking" action)
 }
 ```
 
-### cancelUnstake: 
+### cancelUnstake
+
 Cancels an initiated unstake.
 
 - requires active key: yes
- - parameters:
-	- txID (string): transaction id when the unstake was initiated
-
+- parameters:
+  - txID (string): transaction id when the unstake was initiated
 - example:
-```
+
+```json
 {
     "contractName": "tokens",
     "contractAction": "cancelUnstake",
@@ -107,16 +112,18 @@ Cancels an initiated unstake.
 ```
 
 ## Delegation
-### enableDelegation: 
+
+### enableDelegation
+
 Enables the delegation feature for a token.
 
 - requires active key: yes
- - parameters:
-	- symbol (string): symbol of the token you want to enable the delegation feature
-	- undelegationCooldown (integer): number of days that a user will have to wait until the tokens that were delegated are added back to their balance (between 1 and 365 days)
-
+- parameters:
+  - symbol (string): symbol of the token you want to enable the delegation feature
+  - undelegationCooldown (integer): number of days that a user will have to wait until the tokens that were delegated are added back to their balance (between 1 and 365 days)
 - examples:
-```
+
+```js
 {
     "contractName": "tokens",
     "contractAction": "enableDelegation",
@@ -145,18 +152,19 @@ Enables the delegation feature for a token.
 }
 ```
 
-### delegate: 
+### delegate
+
 Delegates tokens. (if it is a token that allows delegation)
 If a delegation already exists for that account it will add the new quantity to it (to decrease a delegation you need to undelegate)
 
 - requires active key: yes
- - parameters:
-	- to (string): account that will receive the delegation 
-	- symbol (string): symbol of the token you want to delegate
-	- quantity (string): quantity of tokens to delegate
-
+- parameters:
+  - to (string): account that will receive the delegation
+  - symbol (string): symbol of the token you want to delegate
+  - quantity (string): quantity of tokens to delegate
 - example:
-```
+
+```json
 {
     "contractName": "tokens",
     "contractAction": "delegate",
@@ -168,18 +176,19 @@ If a delegation already exists for that account it will add the new quantity to 
 }
 ```
 
-### undelegate: 
+### undelegate
+
 Undelegates tokens partially or totally. (if it is a token that allows delegation)
 There is a cooldown period that is setup per token (see "enableDelegation" action)
 
 - requires active key: yes
- - parameters:
-    - from (string): account that will see its delegation decreased/removed
-	- symbol (string): symbol of the token you want to undelegate
-	- quantity (string): quantity of tokens to undelegate
-
+- parameters:
+  - from (string): account that will see its delegation decreased/removed
+  - symbol (string): symbol of the token you want to undelegate
+  - quantity (string): quantity of tokens to undelegate
 - example:
-```
+
+```json
 {
     "contractName": "tokens",
     "contractAction": "undelegate",
@@ -193,16 +202,17 @@ There is a cooldown period that is setup per token (see "enableDelegation" actio
 
 ## Tokens parameters
 
-### updatePrecision: 
+### updatePrecision
+
 Update the precision of a token (it can only be increased)
 
 - requires active key: yes
- - parameters:
-	- symbol (string): symbol of the token to update
-	- precision (integer): new precision for the token (can only be greater than the current precision)
-
+- parameters:
+  - symbol (string): symbol of the token to update
+  - precision (integer): new precision for the token (can only be greater than the current precision)
 - example:
-```
+
+```json
 {
     "contractName": "tokens",
     "contractAction": "updatePrecision",
@@ -214,19 +224,21 @@ Update the precision of a token (it can only be increased)
 ```
 
 ## Other actions available
-### create:
+
+### create
+
 Creates a token (a token creation fee might be enforced)
 
 - requires active key: yes
- - parameters:
-	- name (string): name of the token (letters, numbers, whitespaces only, max length of 50)
-	- symbol (string): symbol of the token (uppercase letters only, max length of 10)
-	- precision (integer): precision for the token (between 0 and 8)
-	- maxSupply (string): maximum supply for the token (between 1 and 9,007,199,254,740,991)
-	- url (string): url of the project (max length of 255)
-
+- parameters:
+  - name (string): name of the token (letters, numbers, whitespaces only, max length of 50)
+  - symbol (string): symbol of the token (uppercase letters only, max length of 10)
+  - precision (integer): precision for the token (between 0 and 8)
+  - maxSupply (string): maximum supply for the token (between 1 and 9,007,199,254,740,991)
+  - url (string): url of the project (max length of 255)
 - example:
-```
+
+```json
 {
     "contractName": "tokens",
     "contractAction": "create",
@@ -240,18 +252,18 @@ Creates a token (a token creation fee might be enforced)
 }
 ```
 
-### issue:
+### issue
+
 Issue tokens to an account (can only be triggered by the account that created the token)
 
 - requires active key: yes
- - parameters:
-	 - to (string): account that will receive the newly created tokens (3 <= length <= 16)
-	- symbol (string): symbol of the token (uppercase letters only, max length of 10)
-	- quantity (string): quantity of tokens to issue (must match the requirements of the token (maxSupply limit, precision, etc...)
-
-
+- parameters:
+  - to (string): account that will receive the newly created tokens (3 <= length <= 16)
+  - symbol (string): symbol of the token (uppercase letters only, max length of 10)
+  - quantity (string): quantity of tokens to issue (must match the requirements of the token (maxSupply limit, precision, etc...)
 - example:
-```
+
+```json
 {
     "contractName": "tokens",
     "contractAction": "issue",
@@ -262,18 +274,19 @@ Issue tokens to an account (can only be triggered by the account that created th
     }
 }
 ```
-### transfer:
+
+### transfer
+
 Transfer tokens to an account
 
 - requires active key: yes
- - parameters:
-	 - to (string): account that will receive the tokens (3 <= length <= 16)
-	- symbol (string): symbol of the token (uppercase letters only, max length of 10)
-	- quantity (string): quantity of tokens to issue (must match the requirements of the token (maxSupply limit, precision, etc...)
-
-
+- parameters:
+  - to (string): account that will receive the tokens (3 <= length <= 16)
+  - symbol (string): symbol of the token (uppercase letters only, max length of 10)
+  - quantity (string): quantity of tokens to issue (must match the requirements of the token (maxSupply limit, precision, etc...)
 - example:
-```
+
+```json
 {
     "contractName": "tokens",
     "contractAction": "transfer",
@@ -284,18 +297,19 @@ Transfer tokens to an account
     }
 }
 ```
-### transferToContract:
+
+### transferToContract
+
 Transfer tokens to a contract
 
 - requires active key: yes
- - parameters:
-	 - to (string): contract that will receive the tokens (3 <= length <= 50)
-	- symbol (string): symbol of the token (uppercase letters only, max length of 10)
-	- quantity (string): quantity of tokens to issue (must match the requirements of the token (maxSupply limit, precision, etc...)
-
-
+- parameters:
+  - to (string): contract that will receive the tokens (3 <= length <= 50)
+  - symbol (string): symbol of the token (uppercase letters only, max length of 10)
+  - quantity (string): quantity of tokens to issue (must match the requirements of the token (maxSupply limit, precision, etc...)
 - example:
-```
+
+```json
 {
     "contractName": "tokens",
     "contractAction": "transferToContract",
@@ -306,17 +320,18 @@ Transfer tokens to a contract
     }
 }
 ```
-### transferOwnership:
+
+### transferOwnership
+
 Transfer ownership of a token from the current token issuer to an other account
 
 - requires active key: yes
- - parameters:
-	 - to (string): contract that will receive the ownership of the token (3 <= length <= 50)
-	- symbol (string): symbol of the token (uppercase letters only, max length of 10)
-
-
+- parameters:
+  - to (string): contract that will receive the ownership of the token (3 <= length <= 50)
+  - symbol (string): symbol of the token (uppercase letters only, max length of 10)
 - example:
-```
+
+```json
 {
     "contractName": "tokens",
     "contractAction": "transferOwnership",
@@ -326,17 +341,18 @@ Transfer ownership of a token from the current token issuer to an other account
     }
 }
 ```
-### updateUrl:
+
+### updateUrl
+
 Update the url of a token
 
 - requires active key: no
- - parameters:
-	 - url (string): the new url for the token (0 <= length <= 255)
-	- symbol (string): symbol of the token (uppercase letters only, max length of 10)
-
-
+- parameters:
+  - url (string): the new url for the token (0 <= length <= 255)
+  - symbol (string): symbol of the token (uppercase letters only, max length of 10)
 - example:
-```
+
+```json
 {
     "contractName": "tokens",
     "contractAction": "updateUrl",
@@ -347,17 +363,17 @@ Update the url of a token
 }
 ```
 
-### updateMetadata:
+### updateMetadata
+
 Update the metadata of a token
 
 - requires active key: no
- - parameters:
-	 - metadata (JSON): the metadata for the token (the JSON when stringified can't exceed 1000 characters)
-	- symbol (string): symbol of the token (uppercase letters only, max length of 10)
-
-
+- parameters:
+  - metadata (JSON): the metadata for the token (the JSON when stringified can't exceed 1000 characters)
+  - symbol (string): symbol of the token (uppercase letters only, max length of 10)
 - example:
-```
+
+```json
 {
     "contractName": "tokens",
     "contractAction": "updateMetadata",
@@ -371,48 +387,52 @@ Update the metadata of a token
 }
 ```
 
-## Tables available:
+## Tables available
 
-### balances:
+### balances
+
 balances of the users
 
--	fields:
-	- account = account owning the balance
-	- symbol = symbol of the token
-	- balance = quantity of tokens
-	- stake = quantity of tokens staked
-	- pendingUnstake = quantity of tokens being unstaked
-	- delegationsIn = quantity of tokens being delegated to that account
-    - delegationsOut = quantity of tokens being delegated to other accounts
-	- pendingUndelegations = quantity of tokens being undelegated
+- fields:
+  - account = account owning the balance
+  - symbol = symbol of the token
+  - balance = quantity of tokens
+  - stake = quantity of tokens staked
+  - pendingUnstake = quantity of tokens being unstaked
+  - delegationsIn = quantity of tokens being delegated to that account
+  - delegationsOut = quantity of tokens being delegated to other accounts
+  - pendingUndelegations = quantity of tokens being undelegated
 
-### delegations:
+### delegations
+
 opened delegations
 
--	fields:
-	- from = account that initiated the delegation
-	- to = account that received the delegation
-	- symbol = symbol of the token delegated
-	- quantity = quantity of tokens delegated
+- fields:
+  - from = account that initiated the delegation
+  - to = account that received the delegation
+  - symbol = symbol of the token delegated
+  - quantity = quantity of tokens delegated
 
-### pendingUnstakes:
+### pendingUnstakes
+
 pending unstakes
 
--	fields:
-	- account: account that initiated the unstake
-	- symbol:  symbol of the token being unstaked
-	- quantity: quantity of tokens being unstaked
-	- quantityLeft: quantity of tokens still to unstake
-	- nextTransactionTimestamp: timestamp when the next unstake transaction will happen (in milliseconds)
-	- numberTransactionsLeft: number of transactions left for this unstake
-	- txID: transaction ID used to initiate the unstake
+- fields:
+  - account: account that initiated the unstake
+  - symbol: symbol of the token being unstaked
+  - quantity: quantity of tokens being unstaked
+  - quantityLeft: quantity of tokens still to unstake
+  - nextTransactionTimestamp: timestamp when the next unstake transaction will happen (in milliseconds)
+  - numberTransactionsLeft: number of transactions left for this unstake
+  - txID: transaction ID used to initiate the unstake
 
-### pendingUndelegations:
+### pendingUndelegations
+
 pending undelegations
 
--	fields:
-	- account: account that initiated the undelegation
-	- symbol:  symbol of the token being undelegated
-	- quantity: quantity of tokens being undelegated
-	- completeTimestamp: timestamp when the undelegation will be completed (in milliseconds)
-	- txID: transaction ID used to initiate the undelegation
+- fields:
+  - account: account that initiated the undelegation
+  - symbol: symbol of the token being undelegated
+  - quantity: quantity of tokens being undelegated
+  - completeTimestamp: timestamp when the undelegation will be completed (in milliseconds)
+  - txID: transaction ID used to initiate the undelegation

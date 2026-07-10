@@ -4,40 +4,41 @@ Documentation written by [ali-h](https://github.com/ali-h)
 
 # Table of Contents
 
-* [Introduction](#introduction)
-* [Actions available](#actions-available)
-  * [create](#create)
-  * [claim](#claim)
-  * [expire](#expire)
-* [Tables available](#tables-available)
-  * [params](#params)
-  * [claimdrops](#claimdrops)
+- [Introduction](#introduction)
+- [Actions available](#actions-available)
+  - [create](#create)
+  - [claim](#claim)
+  - [expire](#expire)
+- [Tables available](#tables-available)
+  - [params](#params)
+  - [claimdrops](#claimdrops)
 
-# Introduction
+## Introduction
 
 Claimdrops smart contract can be used to create limited time offerings for any token on hive-engine with specific price, pool & limits for everyone or a list of users.
 
-# Actions available:
+## Actions available
 
-## create:
+### create
+
 Creates a new claimdrops. A fee of 0.1 BEE for each claim plus 50 BEE for creation is required. Each Claimdrop has a pool from which quantity of each claim is deducted. a maximum claim limit for everyone or a list of users can be defined. Price is set in Hive Pegged Token (SWAP.HIVE) which is sent to the owner account/contract set by the user creating the claimdrop. Expiry can be upto 90 days from creation time.
 
-* requires active key: yes
-* can be called by: anyone (holding tokens)
-* parameters:
-  * symbol (string): token to claimdrop
-  * price (string): price of 1 token
-  * pool (string): max quantity of tokens to claimdrop
-  * maxClaims (integer): maximum claims
-  * expiry (date): expiration time (ex. 2020-12-10T05:45:00)
-  * owner (string): username of owner or name of a contract (earnings and remaining pool will be sent here)
-  * ownerType (string 'user' || 'contract'): type of owner
-  * list (array): array of accounts who are eligible to claim, with thier maximum limits (i.e [account, limit])
-  * limit (array): maximum buy/claim limit for every account
-  Note: Only one parameter of `list` and `limit` is required. while `list` limits the claimdrop to accounts in the list, `limit` allows everyone to claim
+- requires active key: yes
+- can be called by: anyone (holding tokens)
+- parameters:
+  - symbol (string): token to claimdrop
+  - price (string): price of 1 token
+  - pool (string): max quantity of tokens to claimdrop
+  - maxClaims (integer): maximum claims
+  - expiry (date): expiration time (ex. 2020-12-10T05:45:00)
+  - owner (string): username of owner or name of a contract (earnings and remaining pool will be sent here)
+  - ownerType (string 'user' || 'contract'): type of owner
+  - list (array): array of accounts who are eligible to claim, with thier maximum limits (i.e [account, limit])
+  - limit (array): maximum buy/claim limit for every account
+    Note: Only one parameter of `list` and `limit` is required. while `list` limits the claimdrop to accounts in the list, `limit` allows everyone to claim
+- examples:
 
-* examples:
-```
+```json
 {
     "contractName": "claimdrops",
     "contractAction": "create",
@@ -59,7 +60,8 @@ Creates a new claimdrops. A fee of 0.1 BEE for each claim plus 50 BEE for creati
 ```
 
 with limit for everyone
-```
+
+```json
 {
     "contractName": "claimdrops",
     "contractAction": "create",
@@ -77,7 +79,8 @@ with limit for everyone
 ```
 
 A successful action will emit a "create" event, e.g.
-```
+
+```json
 {
     "contract": "claimdrops",
     "event": "create",
@@ -87,17 +90,18 @@ A successful action will emit a "create" event, e.g.
 }
 ```
 
-## claim:
+### claim
+
 Claim tokens. Price in HIVE.SWAP is calculated by the quantity. Price is deducted and sent to the claimdrop owner while claimant receives requested tokens.
 
-* requires active key: yes
-* can be called by: accounts eligible for the claimdrop
-* parameters:
-  * claimdropId (string): id of the claimdrop
-  * quantity (string): quantity of tokens to claim
+- requires active key: yes
+- can be called by: accounts eligible for the claimdrop
+- parameters:
+  - claimdropId (string): id of the claimdrop
+  - quantity (string): quantity of tokens to claim
+- examples:
 
-* examples:
-```
+```json
 {
     "contractName": "claimdrops",
     "contractAction": "claim",
@@ -109,7 +113,8 @@ Claim tokens. Price in HIVE.SWAP is calculated by the quantity. Price is deducte
 ```
 
 A successful action will emit a "claim" event, e.g.
-```
+
+```json
 {
     "contract": "claimdrops",
     "event": "claim",
@@ -120,16 +125,17 @@ A successful action will emit a "claim" event, e.g.
 }
 ```
 
-## expire:
+### expire
+
 Expires a claimdrop. once a claimdrop is expired, remaining tokens in the pool (if any) are sent to the owner account.
 
-* requires active key: yes
-* can be called by: claimdrop's owner or creator
-* parameters:
-  * claimdropId (string): id of the claimdrop
+- requires active key: yes
+- can be called by: claimdrop's owner or creator
+- parameters:
+  - claimdropId (string): id of the claimdrop
+- examples:
 
-* examples:
-```
+```json
 {
     "contractName": "claimdrops",
     "contractAction": "expire",
@@ -140,7 +146,8 @@ Expires a claimdrop. once a claimdrop is expired, remaining tokens in the pool (
 ```
 
 A successful action will emit an "expire" event, e.g.
-```
+
+```json
 {
     "contract": "claimdrops",
     "event": "expire",
@@ -150,28 +157,33 @@ A successful action will emit an "expire" event, e.g.
 }
 ```
 
-# Tables available:
+## Tables available
+
 Note: all tables below have an implicit _id field that provides a unique numeric identifier for each particular object in the database. Most of the time the _id field is not important, so we have omitted it from table descriptions.
 
-## params:
-contains contract parameters such as the current fees
-* fields
-  * creationFee = the cost in BEE for claimdrop creation
-  * feePerClaim = the cost in BEE per claim
-  * maxExpiryTime = maximum expiry time in milliseconds
+### params
 
-## claimdrops:
+contains contract parameters such as the current fees
+
+- fields
+  - creationFee = the cost in BEE for claimdrop creation
+  - feePerClaim = the cost in BEE per claim
+  - maxExpiryTime = maximum expiry time in milliseconds
+
+### claimdrops
+
 contains information about claimdrops
-* fields
-  * claimdropId = id of the claimdrop (unique)
-  * symbol = symbol of token to claimdrop
-  * price = price per token
-  * remainingPool = remaining quantity of tokens to claim
-  * remainingClaims = number of remaining claims
-  * claims = array of succesfull claims
-  * expiry: expiry timestamp
-  * owner: owner of the claimdrop
-  * ownerType: type of owner (user or contract)
-  * sender: creator of the claimdrop
-  * limit: maximul claim limit for everyone
-  * list: list of accounts eligible to claim with max limits
+
+- fields
+  - claimdropId = id of the claimdrop (unique)
+  - symbol = symbol of token to claimdrop
+  - price = price per token
+  - remainingPool = remaining quantity of tokens to claim
+  - remainingClaims = number of remaining claims
+  - claims = array of succesfull claims
+  - expiry: expiry timestamp
+  - owner: owner of the claimdrop
+  - ownerType: type of owner (user or contract)
+  - sender: creator of the claimdrop
+  - limit: maximul claim limit for everyone
+  - list: list of accounts eligible to claim with max limits

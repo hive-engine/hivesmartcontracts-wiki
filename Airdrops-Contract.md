@@ -4,31 +4,32 @@ Documentation written by [ali-h](https://github.com/ali-h)
 
 # Table of Contents
 
-* [Introduction](#introduction)
-* [Actions available](#actions-available)
-  * [newAirdrop](#newairdrop)
-* [Tables available](#tables-available)
-  * [params](#params)
-  * [pendingAirdrops](#pendingairdrops)
+- [Introduction](#introduction)
+- [Actions available](#actions-available)
+  - [newAirdrop](#newairdrop)
+- [Tables available](#tables-available)
+  - [params](#params)
+  - [pendingAirdrops](#pendingairdrops)
 
-# Introduction
+## Introduction
 
 The airdrops contract allows any user to airdrop hive-engine tokens. User can set up an airdrop with a custom list to send tokens or stake tokens without having to manually transact.
 
-# Actions available:
+## Actions available
 
-## newAirdrop:
+### newAirdrop
+
 Initiate a new airdrop. A fee of 0.1 BEE for each account in the airdrop list is required (i.e 100 BEE/1000 accounts). Note that there must be enough tokens in the sender's accounts to initiate the airdrop. If distribution type is stake, Token must have enabled staking.
 
-* requires active key: yes
-* can be called by: anyone (holding tokens)
-* parameters:
-  * symbol (string): token to airdrop
-  * type (string 'transfer' || 'stake'): distribution type, either stake or transfer
-  * list (array): array of [account, quantity], `quantity` will be transfered/staked to `account`.
+- requires active key: yes
+- can be called by: anyone (holding tokens)
+- parameters:
+  - symbol (string): token to airdrop
+  - type (string 'transfer' || 'stake'): distribution type, either stake or transfer
+  - list (array): array of [account, quantity], `quantity` will be transfered/staked to `account`.
+- examples:
 
-* examples:
-```
+```json
 {
     "contractName": "airdrops",
     "contractAction": "newAirdrop",
@@ -45,7 +46,8 @@ Initiate a new airdrop. A fee of 0.1 BEE for each account in the airdrop list is
 ```
 
 A successful action will emit a "newAirdrop" event, e.g.
-```
+
+```json
 {
     "contract": "airdrops",
     "event": "newAirdrop",
@@ -57,21 +59,26 @@ A successful action will emit a "newAirdrop" event, e.g.
 
 After being initialized, distribution will automatically start from the next block.
 
-# Tables available:
+## Tables available
+
 Note: all tables below have an implicit _id field that provides a unique numeric identifier for each particular object in the database. Most of the time the _id field is not important, so we have omitted it from table descriptions.
 
-## params:
-contains contract parameters such as the current fees
-* fields
-  * feePerTransaction = the cost in BEE per transaction
-  * transactionPerBlock = number of maximum transaction in each block per airdrop
-  * maxAirdropsPerBlock = number of maximum airdrops in each block
+### params
 
-## pendingAirdrops:
+contains contract parameters such as the current fees
+
+- fields
+  - feePerTransaction = the cost in BEE per transaction
+  - transactionPerBlock = number of maximum transaction in each block per airdrop
+  - maxAirdropsPerBlock = number of maximum airdrops in each block
+
+### pendingAirdrops
+
 contains information about pending airdrops
-* fields
-  * airdropId = id of airdrop (unique)
-  * symbol = symbol of token to airdrop
-  * type = distribution type
-  * list = list of accounts to transact
-  * blockNumber = block number in which airdrop was initiated
+
+- fields
+  - airdropId = id of airdrop (unique)
+  - symbol = symbol of token to airdrop
+  - type = distribution type
+  - list = list of accounts to transact
+  - blockNumber = block number in which airdrop was initiated

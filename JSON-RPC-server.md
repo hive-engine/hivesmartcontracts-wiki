@@ -1,13 +1,14 @@
-
 When running the application, a JSON RPC server is made available to query the sidechain and its database on port 5000.
 
- ## 1. The "blockchain" endpoint (http://localhost:5000/blockchain)
+## 1. The "blockchain" endpoint (<http://localhost:5000/blockchain>)
+
 Available methods:
 
 ### getLatestBlockInfo(): get the latest block of the sidechain
 
 Command:
-```
+
+```json
 {
     "jsonrpc": "2.0",
     "method": "getLatestBlockInfo",
@@ -17,7 +18,7 @@ Command:
 
 Result:
 
-```
+```json
 {
     "jsonrpc": "2.0",
     "id": 1,
@@ -46,7 +47,8 @@ Result:
 ### getBlockInfo(blockNumber): get the block with the specified block number of the sidechain
 
 Command:
-```
+
+```json
 {
     "jsonrpc": "2.0",
     "method": "getBlockInfo",
@@ -59,7 +61,7 @@ Command:
 
 Result:
 
-```
+```json
 {
     "jsonrpc": "2.0",
     "id": 1,
@@ -90,7 +92,8 @@ Result:
 This API can be used instead of calling getBlockInfo multiple times. startBlockNumber is the first block to retrieve, and count is how many blocks to retrieve, inclusive of the starting block. Note that count cannot be greater than 1000.
 
 Command:
-```
+
+```json
 {
     "jsonrpc": "2.0",
     "method": "getBlockRangeInfo",
@@ -105,7 +108,8 @@ Command:
 This API is processor intensive, and so is recommended for use on private nodes only. It is disabled by default on most public Engine nodes.
 
 Result:
-```
+
+```json
 {
     "jsonrpc": "2.0",
     "id": 1,
@@ -183,7 +187,8 @@ Result:
 ### getTransactionInfo(txid): retrieve the specified transaction info of the sidechain
 
 Command:
-```
+
+```json
 {
     "jsonrpc": "2.0",
     "method": "getTransactionInfo",
@@ -196,13 +201,13 @@ Command:
 
 Result:
 
-```
+```json
 {
     "jsonrpc": "2.0",
     "id": 1,
     "result": {
 	    "blockNumber": 12,
-	    "refSteemBlockNumber": 25797141,
+	    "refHiveBlockNumber": 25797141,
 	    "transactionId": "b299d24be543cd50369dbc83cf6ce10e2e8abc9b",
 	    "sender": "smmarkettoken",
 	    "contract": "smmkt",
@@ -222,7 +227,8 @@ Result:
 ### getStatus(): retrieve the status of the SSC node
 
 Command:
-```
+
+```json
 {
     "jsonrpc": "2.0",
     "method": "getStatus",
@@ -234,15 +240,23 @@ Command:
 
 Result:
 
-```
+```json
 {
     "jsonrpc": "2.0",
     "id": 1,
     "result": {
         "lastBlockNumber": 1,
-        "lastBlockRefSteemBlockNumber": 37899120,
-        "lastParsedSteemBlockNumber": 37900295,
-        "SSCnodeVersion": "0.1.0"
+        "lastBlockRefHiveBlockNumber": 37899120,
+        "lastParsedHiveBlockNumber": 37900295,
+        "lastHash": "LATEST_SIDECHAIN_BLOCK_HASH",
+        "SSCnodeVersion": "ivm-1.1.4",
+        "domain": "",
+        "chainId": "mainnet-hive",
+        "disabledMethods": {
+            "blockchain": ["getBlockRangeInfo"],
+            "contracts": []
+        },
+        "lightNode": false
     }
 }
 ```
@@ -250,7 +264,8 @@ Result:
 ### getBlockInfoByHiveBlock(hiveBlockNumber): retrieve ssc block with ref hive block hiveBlockNumber by providing hiveBlockNumber
 
 Command:
-```
+
+```json
 {
     "jsonrpc": "2.0",
     "method": "getBlockInfoByHiveBlock",
@@ -263,7 +278,7 @@ Command:
 
 Result:
 
-```
+```json
 {
     "jsonrpc": "2.0",
     "id": 0,
@@ -303,19 +318,20 @@ Result:
 }
 ```
 
-## 3. The "contracts" endpoint (http://localhost:5000/contracts)
+## 3. The "contracts" endpoint (<http://localhost:5000/contracts>)
+
 Available methods:
 
 ### getContract(contract): get the contract specified from the database
 
 Command:
 
-```
+```json
 {
     "jsonrpc": "2.0",
     "method": "getContract",
     "params": {
-        "name": "CONTRAC_NAME"
+        "name": "CONTRACT_NAME"
     },
     "id": 1
 }
@@ -323,7 +339,7 @@ Command:
 
 Result:
 
-```
+```json
 {
     "jsonrpc": "2.0",
     "id": 1,
@@ -347,7 +363,7 @@ Result:
 
 Command:
 
-```
+```json
 {
     "jsonrpc": "2.0",
     "method": "findOne",
@@ -363,7 +379,7 @@ Command:
 
 Result:
 
-```
+```json
 {
     "jsonrpc": "2.0",
     "id": 1,
@@ -380,7 +396,7 @@ Result:
 
 Command:
 
-```
+```js
 {
     "jsonrpc": "2.0",
     "method": "find",
@@ -391,7 +407,7 @@ Command:
         "limit": 20,  // default: 1000
 	"offset": 20, // default: 0
 	"indexes": [], // default: empty, an index is an object { index: string, descending: boolean },
-	"project": {}, // default empty, a project is an object { fieldA: 1, fieldB: fieldA * 2} See MongoDB's project documentation https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/ Please note that only 1,0 are allowed(include/supress a field) as values unless `rpcConfig.allowArbitraryProject` is enabled on the node
+	"project": {}, // default empty, a project is an object { fieldA: 1 }. Only 1 and 0 are allowed unless `rpcConfig.allowArbitraryProject` is enabled on the node.
     },
     "id": 1
 }
@@ -399,7 +415,7 @@ Command:
 
 Result:
 
-```
+```json
 {
     "jsonrpc": "2.0",
     "id": 1,
@@ -414,26 +430,27 @@ Result:
 }
 ```
 
-
 Please note, that you can also add the endpoint to the `method` in the POST body instead of adding it to the URL. For example, the call to `/contracts` with the body:
-```
+
+```json
 {
     "jsonrpc": "2.0",
     "method": "getContract",
     "params": {
-        "name": "CONTRAC_NAME"
+        "name": "CONTRACT_NAME"
     },
     "id": 1
 }
 ```
 
 can be made to `/` with the body:
-```
+
+```json
 {
     "jsonrpc": "2.0",
     "method": "contracts.getContract",
     "params": {
-        "name": "CONTRAC_NAME"
+        "name": "CONTRACT_NAME"
     },
     "id": 1
 }

@@ -26,6 +26,8 @@
 
 [DSwap API](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/master/DSwap-API.md)
 
+[Contract Action Index](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/master/Contract-Action-Index.md)
+
 ## Contract Documentation
 
 [Tokens Contract](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/master/Tokens-Contract.md)
