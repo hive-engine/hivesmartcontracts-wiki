@@ -166,7 +166,7 @@ Its possible to reward liquidity providers to the pool directly on the sidechain
 
 #### createRewardPool
 
-This action allows a token issuer to create a reward system fulfilled through the Hive Engine [Mining Contract](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/master/Mining-Contract.md).
+This action allows a token issuer to create a reward system fulfilled through the Hive Engine [Mining Contract](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/main/Mining-Contract.md).
 The pool is automatically activated upon creation. A fee of 1000 BEE is required.
 
 - requires active key: yes

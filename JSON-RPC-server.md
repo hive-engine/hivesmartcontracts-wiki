@@ -1,5 +1,9 @@
 When running the application, a JSON RPC server is made available to query the sidechain and its database on port 5000.
 
+Public Hive Engine URLs for the same API are `https://api.hive-engine.com/rpc/blockchain` and `https://api.hive-engine.com/rpc/contracts`. See the [agent and developer quickstart](Home.md#agent-and-developer-quickstart).
+
+Example results below are captured responses. Account names in those captures (for example `steemsc`) are historical chain data, not defaults for new calls.
+
 ## 1. The "blockchain" endpoint (<http://localhost:5000/blockchain>)
 
 Available methods:

@@ -8,6 +8,8 @@ Broadcast a Hive `custom_json` operation with the sidechain id in the `id` field
 ssc-mainnet-hive
 ```
 
+**Historical:** Steem Engine mainnet used the custom JSON id `ssc-mainnet1`. Hive Engine mainnet uses `ssc-mainnet-hive`. The [Hive Engine developer portal](https://hive-engine.github.io/engine-docs/) documents the same Hive id and still mentions the older Steem id.
+
 The `json` field can contain a single contract call or an array of contract calls:
 
 ```js
