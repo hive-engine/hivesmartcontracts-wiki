@@ -2,6 +2,8 @@
 
 **Status:** this page documents the external DSwap service, not the `hive-engine/hivesmartcontracts` node or on-chain contract APIs. Some examples and endpoints are legacy and may no longer reflect current service availability. Verify against the live DSwap service before building new integrations from this page.
 
+**Historical:** converter examples below include the deposit account `steem-engine` and the asset STEEM. Those names come from the captured responses on this page. Hive Engine mainnet contract calls use the sidechain id `ssc-mainnet-hive` (see [Interact with the sidechain](Interact-with-the-sidechain.md)).
+
 ## Table of Contents
 
 - [CalculateSwapOutput](#calculateswapoutput)

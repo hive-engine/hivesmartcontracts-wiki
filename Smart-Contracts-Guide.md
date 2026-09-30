@@ -108,7 +108,7 @@ This is a **marketBuy** action for the **market** smart contract. The **ssc-main
 
 Smart contracts have their own on-chain database storage in the form of what we call tables (these are really MongoDB collections). Tables can be created as part of a contract's initialization action, and then are permanently associated with the contract that created them. Only the owner contract can update data in its tables, but any contract can read them. Contract tables can also be queried externally through the node's API.
 
-Refer to the [database API section](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/master/Database-API.md) for more details.
+Refer to the [database API section](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/main/Database-API.md) for more details.
 
 ## Development pipeline
 
@@ -210,6 +210,8 @@ Once your smart contract is deployed, you can perform post-release checks to ver
 
 Follow the directions here to install Beem: <https://github.com/holgern/beem>
 
+Sign on a machine you control. The wallet password and private key in the snippet are placeholders. Do not commit them, log them, or paste them into a prompt or ticket. The Hive node URL below is `https://api.hive.blog`.
+
 Here's a snippet of Python code for broadcasting an example custom json:
 
 ```python
@@ -224,15 +226,15 @@ hiveNode = 'https://api.hive.blog'
 chainId = 'ssc-mainnet-hive'
 
 if __name__ == '__main__':
-    stm = Hive(hiveNode)
-    set_shared_hive_instance(stm)
+    hive = Hive(hiveNode)
+    set_shared_hive_instance(hive)
 
     # uncomment this to initialize Beem wallet
-    #stm.wallet.wipe(True)
-    #stm.wallet.create("my password")
-    #stm.wallet.addPrivateKey("put private key here")
+    #hive.wallet.wipe(True)
+    #hive.wallet.create("my password")
+    #hive.wallet.addPrivateKey("put private key here")
 
-    stm.wallet.unlock("my password")
+    hive.wallet.unlock("my password")
 
     src = "myaccountname"
     tx = TransactionBuilder()
@@ -263,7 +265,7 @@ if __name__ == '__main__':
 
 For quick testing, I recommend using Postman: <https://www.postman.com/downloads/>
 
-Postman allows you to easily broadcast POST queries to the Engine web API so you can examine the state of the sidechain and check smart contract activity. For details of all the various API calls available, refer to the [JSON RPC server section](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/master/JSON-RPC-server.md).
+Postman allows you to easily broadcast POST queries to the Engine web API so you can examine the state of the sidechain and check smart contract activity. For details of all the various API calls available, refer to the [JSON RPC server section](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/main/JSON-RPC-server.md).
 
 Let's look at an example of how to query for DEC market orders, by fetching data from the market contract's sellBook table. First, in Postman make sure the query type is POST. The API endpoint is:
 
@@ -368,7 +370,7 @@ Smart contract code executes in a constrained sandbox environment. As such, you 
 
 Javascript built-in objects that are not available: RegExp
 
-Refer to the [smart contracts API](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/master/Smart-Contracts-API.md) section for more information on what is available to you through the api object.
+Refer to the [smart contracts API](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/main/Smart-Contracts-API.md) section for more information on what is available to you through the api object.
 
 ### Working with numbers
 
@@ -558,13 +560,28 @@ api.emit('disableMarket', {
 
 This is not required, but is a good way to log state changes which will show up on block explorers for people who want to track event history. Emitted events get recorded in the transaction logs for the block that included the action containing the emit call. Apps that trigger contract actions can read these logs to determine if the action succeeded or failed. If an `api.assert` fails, there will be an error recorded in the logs with the assertion failure message. Refer to unit test cases for numerous examples of how transaction logs are formatted.
 
-For example, if you want to look at disableMarket events for the botcontroller contract, as in the above example, you can search on the hive-engine.rocks block explorer like this:
+For example, disableMarket events for the botcontroller contract were previously listed on the hive-engine.rocks block explorer:
 
 <https://hive-engine.rocks/transactions?contract=botcontroller&contract_action=disableMarket>
 
+That host no longer completes an HTTPS handshake, and HTTP to it times out (checked 2026-09-29). The transaction those pages pointed at is still readable with `getTransactionInfo` on the public blockchain RPC documented in [JSON RPC server](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/main/JSON-RPC-server.md). POST this body to `https://api.hive-engine.com/rpc/blockchain`:
+
+```json
+{
+    "jsonrpc": "2.0",
+    "method": "getTransactionInfo",
+    "params": {
+        "txid": "3c6dca629ce04ce2781c6cd376f660bac19f04d0"
+    },
+    "id": 1
+}
+```
+
+The result is a `botcontroller` / `disableMarket` transaction. Its `logs` field holds the emitted event. Screenshots from when the explorer responded:
+
 <img src="https://i.imgur.com/Rlz2jqY.png">
 
-The block logs for this transaction look like this: <https://hive-engine.rocks/tx/3c6dca629ce04ce2781c6cd376f660bac19f04d0>
+Former block-log URL: <https://hive-engine.rocks/tx/3c6dca629ce04ce2781c6cd376f660bac19f04d0>
 
 <img src="https://i.imgur.com/zYysZK2.png">
 

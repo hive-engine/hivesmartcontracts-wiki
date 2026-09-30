@@ -87,6 +87,8 @@ The `config.json` file has all the settings to make sure your node listens to th
 }
 ```
 
+The `streamNodes` list matches `config.example.json` in `hive-engine/hivesmartcontracts`. Checked 2026-09-29 with `condenser_api.get_dynamic_global_properties`: `https://api.deathwing.me` and `https://api.openhive.network` answered; `https://rpc.ecency.com` did not resolve; `https://hived.emre.sh` failed the TLS handshake. `https://api.hive.blog`, used in the [Beem example](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/main/Smart-Contracts-Guide.md#broadcasting-custom-json-with-beem), also answered. Confirm the list before relying on it.
+
 Optional config settings which you may wish to edit:
 
 **domain** - if you have a domain name for your node, put the fully qualified domain name here. This information will be returned when status queries are made to your node's API.
@@ -173,13 +175,9 @@ June 7, 2021 update: sorry, we no longer provide public snapshots due to server 
 
 <https://snap.primersion.com/>
 
-<https://snap.rishipanthee.com/snapshots/> (mirror of <https://snap.primersion.com/>)
+<https://snap.primersion.com/light/> (light nodes)
 
-snapshots for light nodes:
-
-<https://snap.primersion.com/light/>
-
-<https://snap.rishipanthee.com/snapshots/light/> (mirror of <https://snap.primersion.com/light/>)
+`https://snap.rishipanthee.com/snapshots/` and `https://snap.rishipanthee.com/snapshots/light/` were published as mirrors of those two URLs. The hostname `snap.rishipanthee.com` does not resolve (checked 2026-09-29). Use the primersion URLs.
 
 - Make sure node is stopped
 - Download a dump of the MongoDB database
@@ -201,7 +199,7 @@ from the Hive genesis block.
 
 ## 6. Checking that your node works
 
-To verify your node is running properly, you can query data from its API. A getStatus query will show you info on the running software version and latest block processed. Refer to [Querying the Engine API](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/master/Smart-Contracts-Guide.md#querying-the-engine-api) for details. In the API URL you should replace `https://api.hive-engine.com/rpc` with `http://<YOUR SERVER IP>:5000`
+To verify your node is running properly, you can query data from its API. A getStatus query will show you info on the running software version and latest block processed. Refer to [Querying the Engine API](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/main/Smart-Contracts-Guide.md#querying-the-engine-api) for details. In the API URL you should replace `https://api.hive-engine.com/rpc` with `http://<YOUR SERVER IP>:5000`
 
 So for example, instead of `https://api.hive-engine.com/rpc/blockchain` you would use `http://<YOUR SERVER IP>:5000/blockchain`
 

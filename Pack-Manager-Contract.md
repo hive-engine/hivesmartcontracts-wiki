@@ -72,7 +72,7 @@ Creates a new NFT definition and places it under management of the packmanager s
 
 Note that the max supply of the NFT will be technically unlimited. Instead of capping supply with a specific number, supply is determined indirectly based on the number of associated pack tokens in existence.
 
-In addition, the NFT's groupBy will be set to ['edition', 'foil', 'type']. For more information about the purpose of groupBy, see [NFT contract documentation](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/master/NFT-Contracts.md#setgroupby).
+In addition, the NFT's groupBy will be set to ['edition', 'foil', 'type']. For more information about the purpose of groupBy, see [NFT contract documentation](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/main/NFT-Contracts.md#setgroupby).
 
 - requires active key: yes
 
@@ -637,7 +637,7 @@ examples:
 
 ### Opening Packs
 
-Once all setup is complete, it's time to open some packs! Note that opening packs has a BEE cost; the contract needs to pay the NFT issuance fees (see [NFT documentation](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/master/NFT-Contracts.md#fees) for more details). The NFT creator is responsible for making sure the packmanager smart contract always has enough BEE on hand for this purpose, and must periodically add more BEE as needed. You can do this using the deposit action.
+Once all setup is complete, it's time to open some packs! Note that opening packs has a BEE cost; the contract needs to pay the NFT issuance fees (see [NFT documentation](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/main/NFT-Contracts.md#fees) for more details). The NFT creator is responsible for making sure the packmanager smart contract always has enough BEE on hand for this purpose, and must periodically add more BEE as needed. You can do this using the deposit action.
 
 The following actions are available:
 
@@ -711,7 +711,7 @@ This action will also result in an error if the contract's fee pool balance is t
 }
 ```
 
-A successful action will emit NFT issuance events for each NFT instance generated. See [NFT documentation](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/master/NFT-Contracts.md#issue) for more details.
+A successful action will emit NFT issuance events for each NFT instance generated. See [NFT documentation](https://github.com/hive-engine/hivesmartcontracts-wiki/blob/main/NFT-Contracts.md#issue) for more details.
 
 ## Tables available
 
